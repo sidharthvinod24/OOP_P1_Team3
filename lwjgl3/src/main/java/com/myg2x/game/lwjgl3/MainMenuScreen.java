@@ -37,8 +37,9 @@ public class MainMenuScreen implements Screen {
 
 		//Change to different screen upon left click
 		if (Gdx.input.isTouched()) {
-			//new GameScreen(game) or PhysicsScreen(game)
-			game.setScreen(new GameScreen(game));
+			//new GameScreen(game) or PhysicsScreen(game) or GridScreen(game)
+			game.setScreen(new GridScreen(game));
+			
 			dispose();
 		}
 		
