@@ -37,10 +37,11 @@ public class GameScreen extends Scene {
 	private EntityManager entityManager;
 	
 	//Textures
-	private Texture bucketImage;
-	private Texture dropImage;
+	private Texture CircleImage;
+	private Texture SquareImage;
 	
 	private Player player;
+	private TextureObject enemy;
 	
 	private Array<TextureObject> dropletList;
 	
@@ -57,21 +58,25 @@ public class GameScreen extends Scene {
 		
 		touchPos = new Vector2();
 		
-		dropImage = new Texture(Gdx.files.internal("droplet.png"));
+		CircleImage = new Texture(Gdx.files.internal("Square.png"));
 		
-		bucketImage = new Texture(Gdx.files.internal("bucket.png"));
-		player = new Player(0.f, 0.f, 4.f, bucketImage);
+		SquareImage = new Texture(Gdx.files.internal("Circle.png"));
+		
+		player = new Player(0.f, 0.f, 4.f, CircleImage);
+		enemy = new TextureObject(rand.nextFloat(8), 4, rand.nextFloat(2.f), SquareImage);
 		
 		entityManager.addEntity(player);
 		
-		dropletList = new Array<TextureObject>();
+		entityManager.addEntity(enemy);
 		
-		for(int i = 0; i < 10; i++)
-		{
-			TextureObject droplet = new TextureObject(rand.nextFloat(8), 4, rand.nextFloat(2.f), dropImage);
-			dropletList.add(droplet);
-			entityManager.addEntity(droplet);
-		}
+//		dropletList = new Array<TextureObject>();
+//		
+//		for(int i = 0; i < 1; i++)
+//		{
+//			TextureObject droplet = new TextureObject(rand.nextFloat(8), 4, rand.nextFloat(2.f), dropImage);
+//			dropletList.add(droplet);
+//			entityManager.addEntity(droplet);
+//		}
 	}
 	
 	
@@ -113,11 +118,14 @@ public class GameScreen extends Scene {
 			shape.rect(player.getRect().getX(), player.getRect().getY(), 
 					player.getRect().getWidth(), player.getRect().getHeight());
 			
-			for(TextureObject droplet : dropletList)
-			{
-				shape.rect(droplet.getRect().getX(), droplet.getRect().getY(), 
-						droplet.getRect().getWidth(), droplet.getRect().getHeight());
-			}
+			shape.rect(enemy.getRect().getX(), enemy.getRect().getY(), 
+					enemy.getRect().getWidth(), enemy.getRect().getHeight());
+			
+//			for(TextureObject droplet : dropletList)
+//			{
+//				shape.rect(droplet.getRect().getX(), droplet.getRect().getY(), 
+//						droplet.getRect().getWidth(), droplet.getRect().getHeight());
+//			}
 			
 		shape.end();
 	}
@@ -140,24 +148,34 @@ public class GameScreen extends Scene {
 		//Update function, currently not implemented
 		entityManager.update();
 		
-		//Droplet falling logic
-		for(TextureObject droplet : dropletList)
+		if(enemy.getRect().overlaps(player.getRect()))
 		{
-			droplet.setPosY(droplet.getPosY() - droplet.getSpeed() * Gdx.graphics.getDeltaTime());
-			if(droplet.getPosY() < 0)
-			{
-				droplet.setPosY(4f);
-			}
+			System.out.println("Collided");
+			enemy.setPosX(rand.nextFloat(7.5f));
+			enemy.setPosY(rand.nextFloat(4));
 			
-			if(droplet.getRect().overlaps(player.getRect()))
-			{
-				System.out.println("Collided");
-				entityManager.removeEntity(droplet);
-				dropletList.removeValue(droplet, false);
-				droplet = null;
-			
-			}
+		
 		}
+		
+		
+		//Droplet falling logic
+//		for(TextureObject droplet : dropletList)
+//		{
+//			droplet.setPosY(droplet.getPosY() - droplet.getSpeed() * Gdx.graphics.getDeltaTime());
+//			if(droplet.getPosY() < 0)
+//			{
+//				droplet.setPosY(4f);
+//			}
+//			
+//			if(droplet.getRect().overlaps(player.getRect()))
+//			{
+//				System.out.println("Collided");
+//				entityManager.removeEntity(droplet);
+//				dropletList.removeValue(droplet, false);
+//				droplet = null;
+//			
+//			}
+//		}
 		
 	}
 	
@@ -170,7 +188,9 @@ public class GameScreen extends Scene {
 		if (Gdx.input.isTouched()) { // If the user has clicked or tapped the screen
 			 touchPos.set(Gdx.input.getX(), Gdx.input.getY()); // Get where the touch happened on screen
 		     viewport.unproject(touchPos); // Convert the units to the world units of the viewport
-		     player.setPosX(touchPos.x); 
+		     player.setPosX(touchPos.x);
+		     System.out.println(touchPos.x);
+		     player.setPosY(touchPos.y);
 	    }
 		
 	}
