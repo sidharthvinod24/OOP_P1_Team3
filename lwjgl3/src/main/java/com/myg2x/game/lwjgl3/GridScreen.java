@@ -22,13 +22,11 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class GridScreen implements Screen {
+public class GridScreen extends Scene{
 	private Random rand;
 	
 	//World viewport
 	private FitViewport viewport;
-	//Touch pos for left click 
-	private Vector2 touchPos;
 	
 	//Sprite batch and shape renderer
 	private SpriteBatch batch;
@@ -44,7 +42,6 @@ public class GridScreen implements Screen {
 	private Player player;
 	private TextureObject enemy;
 	
-	private Array<TextureObject> dropletList;
 	
 	private Grid grid;
 	private Music music;
@@ -66,8 +63,6 @@ public class GridScreen implements Screen {
 		batch = new SpriteBatch();
 		shape = new ShapeRenderer();
 		viewport = new FitViewport(8, 5);
-		
-		touchPos = new Vector2();
 		
 		dropImage = new Texture(Gdx.files.internal("Square.png"));
 		

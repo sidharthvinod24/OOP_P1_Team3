@@ -13,8 +13,7 @@ public class AbstractEngine extends Game{
 	public FitViewport viewport;
 
 	private MainMenuScreen menuScene;
-	private GameScreen gameScene;
-	private PhysicsScreen physicsScene;
+	private GridScreen gridScreen;
 
 	public void create() {
 		batch = new SpriteBatch();
@@ -26,8 +25,7 @@ public class AbstractEngine extends Game{
 		font.setUseIntegerPositions(false);
 		
 		menuScene = new MainMenuScreen(this);
-		gameScene = new GameScreen(this);
-		physicsScene = new PhysicsScreen(this);
+		gridScreen = new GridScreen(this);
 		
 		SetMenuScreen();
 	}
@@ -40,16 +38,11 @@ public class AbstractEngine extends Game{
 	{
 		this.setScreen(menuScene);
 	}
-	
-	public void SetPhysicsScreen()
+	public void SetGridScreen()
 	{
-		this.setScreen(physicsScene);
+		this.setScreen(gridScreen);
 	}
 	
-	public void SetGameScreen()
-	{
-		this.setScreen(new GameScreen(this));
-	}
 	
 
 	public void dispose() {
