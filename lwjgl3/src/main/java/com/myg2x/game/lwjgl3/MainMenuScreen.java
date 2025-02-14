@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.Gdx;
 
 
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends Scene {
 	
 	private final AbstractEngine game;
 	private BitmapFont font;
@@ -37,8 +37,8 @@ public class MainMenuScreen implements Screen {
 
 		//Change to different screen upon left click
 		if (Gdx.input.isTouched()) {
-			//new GameScreen(game) or PhysicsScreen(game)
-			game.setScreen(new GameScreen(game));
+			game.SetPhysicsScreen();
+			//game.SetGameScreen();
 			dispose();
 		}
 		

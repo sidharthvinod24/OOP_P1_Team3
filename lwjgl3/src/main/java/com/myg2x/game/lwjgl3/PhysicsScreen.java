@@ -1,18 +1,21 @@
 package com.myg2x.game.lwjgl3;
 
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
-
-public class PhysicsScreen implements Screen{
+public class PhysicsScreen extends Scene{
 
 	private Box2DDebugRenderer debugRenderer;
+	
+	private SpriteBatch batch;
 	
 	private World world;
 	
@@ -20,57 +23,51 @@ public class PhysicsScreen implements Screen{
 	
 	private FitViewport viewport;
 	
-	private BodyDef bodyDef;
+	private Texture bucket;
+	private Player player;
+
 	private BodyDef groundBodyDef;
-	private Body body;
+	
 	private Body groundBody;
-	private CircleShape circle;
 	private PolygonShape groundBox;
-	private FixtureDef fixtureDef;
-	private Fixture fixture;
+	
+	private PhysicsObject circleObject;
+	private PhysicsObject playerObject;
 	
 	PhysicsScreen(final AbstractEngine game)
 	{
 		debugRenderer = new Box2DDebugRenderer();
 		
+		batch = new SpriteBatch();
+		
 		//Creates new world with y gravity of -10 (Like the real world)
-		world = new World(new Vector2(0, -10), true);
+		world = new World(new Vector2(0, -10), false);
+		
 	
 		//Set viewport
-		viewport = new FitViewport(640, 480);
+		viewport = new FitViewport(9,5);
 		//Camera Zoom
 		//((OrthographicCamera) viewport.getCamera()).zoom = 1.2f;
 
-		//Body definition
-		bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(5,3);
+		bucket = new Texture(Gdx.files.internal("bucket.png"));
+		player = new Player(0.f, 2.f, 2.f, bucket);
 		
-		body = world.createBody(bodyDef);
+		circleObject = new CircleObject(world, 0.5f, 0.f, 0.f, 1.f, 0.1f, 0.9f);
 		
-		//"Body" in shape of circle
-		circle = new CircleShape();
-		circle.setRadius(40f);
-		
-		fixtureDef = new FixtureDef();
-		fixtureDef.shape = circle;
-		fixtureDef.density = 1f;
-		fixtureDef.friction = 0.4f;
-		fixtureDef.restitution = 1.f; //Bounce / Elasticity
-		
-		fixture = body.createFixture(fixtureDef);
-		
+		playerObject = new PhysicsObject(world, 0.4f , 0.4f, player.getPosX(), player.getPosY());
+		//0.4f
 		//Create ground
 		groundBodyDef = new BodyDef();
-		groundBodyDef.position.set(new Vector2(0, -100));
+		groundBodyDef.position.set(new Vector2(0, -2.f));
 		groundBody = world.createBody(groundBodyDef);
 		
 		groundBox = new PolygonShape();
-		groundBox.setAsBox(640, 10.0f);
-		groundBody.createFixture(groundBox, 0.0f);
+		groundBox.setAsBox(640, 0.5f);
+		groundBody.createFixture(groundBox, 10.0f);
 		
+		
+		groundBox.dispose();
 		accumulator = 0;
-		
 		
 	}
 	
@@ -84,8 +81,24 @@ public class PhysicsScreen implements Screen{
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		ScreenUtils.clear(0.f,0.f,0.3f,0.f);
+		viewport.apply();
+		
+		batch.setProjectionMatrix(viewport.getCamera().combined);
 		debugRenderer.render(world, viewport.getCamera().combined);
-		System.out.println(viewport.getCamera().viewportWidth);
+		
+		batch.begin();
+			player.draw(batch);
+		batch.end();
+		
+		
+		player.movement();
+		playerObject.setPosition(player.getPosX(), player.getPosY());
+		
+		//circleObject.getBody().applyForceToCenter(new Vector2(0, 11), true);
+		
+		if(Gdx.input.isKeyJustPressed(Keys.E)) 
+			circleObject.getBody().applyLinearImpulse(new Vector2(0, 20), circleObject.getBody().getPosition(), true);
+		//Step the physics engine
 		world.step(1/60.f, 6, 2);
 		
 	}
@@ -118,21 +131,9 @@ public class PhysicsScreen implements Screen{
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		circle.dispose();
-		groundBox.dispose();
 		
 	}
-	
-	private void doPhysicsStep(float deltaTime) {
-	    // fixed time step
-	    // max frame time to avoid spiral of death (on slow devices)
-//	    float frameTime = Math.min(deltaTime, 0.25f);
-//	    accumulator += frameTime;
-//	    while (accumulator >= Constants.TIME_STEP) {
-//	        WorldManager.world.step(Constants.TIME_STEP, Constants.VELOCITY_ITERATIONS, Constants.POSITION_ITERATIONS);
-//	        accumulator -= Constants.TIME_STEP;
-//	    }
-	}
+
 
 	
 	

@@ -10,8 +10,8 @@ public class Entity {
 	private Texture tex;
 	private Rectangle box;
 	
-	float posX, posY;
-	float speed;
+	private float posX, posY;
+	private float speed;
 	
 	Entity()
 	{
