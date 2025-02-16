@@ -1,177 +1,140 @@
 package com.myg2x.game.lwjgl3;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 
 public class Player extends Entity {
-	
-	private float presstimeL = 0;
-	private float presstimeR = 0;
-	private float presstimeU = 0;
-	private float presstimeD = 0;
-	
-	public Player(float x, float y, float s, Texture t)
-	{
-		super(x, y ,s, t);
-	}
-	
-	//Standard keyboard WASD movement 	
-	public void movement()
-	{
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) 
-		{
-			this.setPosX(this.getPosX() - this.getSpeed() * Gdx.graphics.getDeltaTime());
-		}	
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) 
-		{
-			this.setPosX(this.getPosX() + this.getSpeed() * Gdx.graphics.getDeltaTime());
-		}
-		if(Gdx.input.isKeyPressed(Keys.UP))
-		{
-			this.setPosY(this.getPosY() + this.getSpeed() * Gdx.graphics.getDeltaTime());
-		}
-		if(Gdx.input.isKeyPressed(Keys.DOWN)) 
-		{
-			this.setPosY(this.getPosY() - this.getSpeed() * Gdx.graphics.getDeltaTime());
-		}
-	}
-	
-	public void gridmovement(float tileSize, float offset, int gridWidth, int gridHeight, TextureObject collision) {
-		
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-			if (presstimeL == 0.0000f) {
-				if ((this.getPosX() - tileSize) >= offset) {
-					if (this.getRect().contains(collision.getRect().getX() + 0.5f, collision.getRect().getY() + 0.25f) == false || Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-						this.setPosX(this.getPosX() - tileSize);
-					}
+    private float presstimeL = 0;
+    private float presstimeR = 0;
+    private float presstimeU = 0;
+    private float presstimeD = 0;
 
-				}
-			}
-			presstimeL += Gdx.graphics.getDeltaTime();
+    // Return value indicates if movement was blocked by collision
+    public boolean wasBlocked = false;
 
-			if (presstimeL > 0.5f) {
-				presstimeL -= 0.1f;
-				if ((this.getPosX() - tileSize) >= offset) {
-					if (this.getRect().contains(collision.getRect().getX() + 0.5f, collision.getRect().getY() + 0.25f) == false || Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-						this.setPosX(this.getPosX() - tileSize);
-					}
-				}
-			}
-		}
-		else {
-			presstimeL = 0;
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			if (presstimeR == 0.0000f) {
-				if ((this.getPosX() + tileSize) < (offset + gridWidth * tileSize)) {
-					if (this.getRect().contains(collision.getRect().getX() - 0.25f, collision.getRect().getY() + 0.25f) == false || Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-						this.setPosX(this.getPosX() + tileSize);
-					}
+    public Player(float x, float y, float s, Texture t) {
+        super(x, y, s, t);
+    }
 
-				}
-			}
-			presstimeR += Gdx.graphics.getDeltaTime();
+    private boolean checkCollision(float newX, float newY, TextureObject collision) {
+        Rectangle futureRect = new Rectangle(
+            newX,
+            newY,
+            this.getRect().width,
+            this.getRect().height
+        );
+        return Intersector.overlaps(futureRect, collision.getRect());
+    }
 
-			if (presstimeR > 0.5f) {
-				presstimeR -= 0.1f;
-				if ((this.getPosX() + tileSize) < (offset + gridWidth * tileSize)) {
-					if (this.getRect().contains(collision.getRect().getX() - 0.25f, collision.getRect().getY() + 0.25f) == false || Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-						this.setPosX(this.getPosX() + tileSize);
-					}
-				}
-			}
-		}
-		else {
-			presstimeR = 0;
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.UP)) {
-			if (presstimeU == 0.0000f) {
-				if ((this.getPosY() + tileSize) < (offset + gridHeight * tileSize)) {
-					if (this.getRect().contains(collision.getRect().getX() + 0.25f, collision.getRect().getY() - 0.25f) == false || Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-						this.setPosY(this.getPosY() + tileSize);
-					}
 
-				}
-			}
-			presstimeU += Gdx.graphics.getDeltaTime();
+    // Check if shift is held, and if so, allow movement regardless of collision
+    // Else check if movement would collide with the given object and return the result
+    private boolean tryMove(float newX, float newY, TextureObject collision) {
+        boolean wouldCollide = checkCollision(newX, newY, collision);
+        boolean shiftHeld = Gdx.input.isKeyPressed(Keys.SHIFT_LEFT);
 
-			if (presstimeU > 0.5f) {
-				presstimeU -= 0.1f;
-				if ((this.getPosY() + tileSize) < (offset + gridHeight * tileSize)) {
-					if (this.getRect().contains(collision.getRect().getX() + 0.25f, collision.getRect().getY() - 0.25f) == false || Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-						this.setPosY(this.getPosY() + tileSize);
-					}
-				}
-			}
-		}
-		else {
-			presstimeU = 0;
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.DOWN)) {
-			if (presstimeD == 0.0000f) {
-				if ((this.getPosY() - tileSize) >= offset) {
-					if (this.getRect().contains(collision.getRect().getX() + 0.25f, collision.getRect().getY() + 0.5f) == false || Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-						this.setPosY(this.getPosY() - tileSize);
-					}
+        // Update wasBlocked if there's a collision and shift isn't held
+        wasBlocked = wouldCollide && !shiftHeld;
 
-				}
-			}
-			presstimeD += Gdx.graphics.getDeltaTime();
+        // Allow movement if no collision or shift is held
+        return !wouldCollide || shiftHeld;
+    }
 
-			if (presstimeD > 0.5f) {
-				presstimeD -= 0.1f;
-				if ((this.getPosY() - tileSize) >= offset) {
-					if (this.getRect().contains(collision.getRect().getX() + 0.25f, collision.getRect().getY() + 0.5f) == false || Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
-						this.setPosY(this.getPosY() - tileSize);
-					}
+    public void gridmovement(float tileSize, float offset, int gridWidth, int gridHeight, TextureObject collision) {
+        // Reset blocked state at start of movement check
+        wasBlocked = false;
 
-				}
-			}
-		}
-		else {
-			presstimeD = 0;
-		}
+        // Left movement
+        if(Gdx.input.isKeyPressed(Keys.LEFT)) {
+            if (presstimeL == 0.0000f) {
+                float newX = this.getPosX() - tileSize;
+                if (newX >= offset && tryMove(newX, this.getPosY(), collision
+                    )) {
+                    this.setPosX(newX);
+                }
+            }
+            presstimeL += Gdx.graphics.getDeltaTime();
 
-		
-		
-//		if(Gdx.input.isKeyJustPressed(Keys.LEFT))
-//			if ((this.getPosX() - tileSize) >= offset) {
-//				this.setPosX(this.getPosX() - tileSize);
-//			}
+            if (presstimeL > 0.5f) {
+                presstimeL -= 0.1f;
+                float newX = this.getPosX() - tileSize;
+                if (newX >= offset && tryMove(newX, this.getPosY(), collision)) {
+                    this.setPosX(newX);
+                }
+            }
+        } else {
+            presstimeL = 0;
+        }
 
-			//this.getRect().setX(posX);
-//		if(Gdx.input.isKeyJustPressed(Keys.RIGHT)) 
-//			if ((this.getPosX() + tileSize) < (offset + gridWidth * tileSize)) {
-//				this.setPosX(this.getPosX() + tileSize);
-//			}
+        // Right movement
+        if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
+            if (presstimeR == 0.0000f) {
+                float newX = this.getPosX() + tileSize;
+                if (newX < (offset + gridWidth * tileSize) && tryMove(newX, this.getPosY(), collision)) {
+                    this.setPosX(newX);
+                }
+            }
+            presstimeR += Gdx.graphics.getDeltaTime();
 
-			//this.getRect().setX(posX);
-//		if(Gdx.input.isKeyJustPressed(Keys.UP)) 
-//			if ((this.getPosY() + tileSize) < (offset + gridHeight * tileSize)) {
-//				this.setPosY(this.getPosY() + tileSize);
-//			}
+            if (presstimeR > 0.5f) {
+                presstimeR -= 0.1f;
+                float newX = this.getPosX() + tileSize;
+                if (newX < (offset + gridWidth * tileSize) && tryMove(newX, this.getPosY(), collision)) {
+                    this.setPosX(newX);
+                }
+            }
+        } else {
+            presstimeR = 0;
+        }
 
-//		if(Gdx.input.isKeyJustPressed(Keys.DOWN)) 
-//			if ((this.getPosY() - tileSize) >= offset) {
-//				this.setPosY(this.getPosY() - tileSize);
-//			}
+        // Up movement
+        if(Gdx.input.isKeyPressed(Keys.UP)) {
+            if (presstimeU == 0.0000f) {
+                float newY = this.getPosY() + tileSize;
+                if (newY < (offset + gridHeight * tileSize) && tryMove(this.getPosX(), newY, collision)) {
+                    this.setPosY(newY);
+                }
+            }
+            presstimeU += Gdx.graphics.getDeltaTime();
 
-		
-		
-		return;
-	}
-	
-	//Draw player
-	public void draw(SpriteBatch batch)
-	{
-		batch.draw(this.getTexture(), this.getPosX(), this.getPosY(), 
-				0.5f, 0.5f);
-	}
+            if (presstimeU > 0.5f) {
+                presstimeU -= 0.1f;
+                float newY = this.getPosY() + tileSize;
+                if (newY < (offset + gridHeight * tileSize) && tryMove(this.getPosX(), newY, collision)) {
+                    this.setPosY(newY);
+                }
+            }
+        } else {
+            presstimeU = 0;
+        }
+
+        // Down movement
+        if(Gdx.input.isKeyPressed(Keys.DOWN)) {
+            if (presstimeD == 0.0000f) {
+                float newY = this.getPosY() - tileSize;
+                if (newY >= offset && tryMove(this.getPosX(), newY, collision)) {
+                    this.setPosY(newY);
+                }
+            }
+            presstimeD += Gdx.graphics.getDeltaTime();
+
+            if (presstimeD > 0.5f) {
+                presstimeD -= 0.1f;
+                float newY = this.getPosY() - tileSize;
+                if (newY >= offset && tryMove(this.getPosX(), newY, collision)) {
+                    this.setPosY(newY);
+                }
+            }
+        } else {
+            presstimeD = 0;
+        }
+    }
+
+    public void draw(SpriteBatch batch) {
+        batch.draw(this.getTexture(), this.getPosX(), this.getPosY(), 0.5f, 0.5f);
+    }
 }
