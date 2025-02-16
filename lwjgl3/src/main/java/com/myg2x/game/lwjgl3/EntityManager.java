@@ -54,6 +54,10 @@ public class EntityManager {
 		return entityList.size();
 	}
 	
+	public ArrayList<Entity> getEntityList(){
+		return entityList;
+	}
+	
 	
 
 	

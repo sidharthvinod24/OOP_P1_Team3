@@ -23,7 +23,8 @@ public class GridScreen extends Scene{
 
 	//EntityManager for entityList
 	private EntityManager entityManager;
-
+	private CollisionManager collisionManager;
+	
 	//Textures
 	private Texture bucketImage;
 	private Texture dropImage;
@@ -40,13 +41,14 @@ public class GridScreen extends Scene{
 	public GridScreen(final AbstractEngine game)
 	{
 		entityManager = new EntityManager();
+		collisionManager = new CollisionManager();
 
 
         // Audio Manager
         audioManager = new AudioManager();
         audioManager.addAudio("backgroundMusic","16. Thorn in You (Calm_Roar) _【Fire Emblem Fates OST_ Map Themes Mixed】 【HQ 1080p】.mp3", true);
         audioManager.addAudio("collision","collision.mp3", false);
-        audioManager.playMusic("backgroundMusic",true,0.3f);
+        audioManager.playMusic("backgroundMusic",true,0.0f);
 
 
 		// grid initialization
@@ -67,9 +69,17 @@ public class GridScreen extends Scene{
 		enemy = new TextureObject(grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset(),
 									grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset(), rand.nextFloat()*2.f, dropImage);
 
+		
+		for (int i = 0; i < 5; i++) {
+			enemy = new TextureObject(grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset(),
+					grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset(), rand.nextFloat()*2.f, dropImage);
+			entityManager.addEntity(enemy);
+			collisionManager.addEntity(enemy);
+		}
+		
 		entityManager.addEntity(player);
-
-		entityManager.addEntity(enemy);
+		collisionManager.addEntity(player);
+		
 
 	}
 
@@ -154,20 +164,28 @@ public class GridScreen extends Scene{
 		entityManager.update();
 
 
-        if (player.wasBlocked) {
-            // Play collision sound
-            audioManager.playSoundEffect("collision", 0.3f);
+//        if (player.wasBlocked) {
+//            // Play collision sound
+//            audioManager.playSoundEffect("collision", 0.3f);
+//        }
+        
+        collisionManager.collisionSound(audioManager);
+
+        for (Entity entities : entityManager.getEntityList()) {
+        	if (entities == player) {
+        		continue;
+        	}
+        	if(entities.getRect().overlaps(player.getRect())) {
+                System.out.println("Collided");
+                System.out.println("Player: " + player.getRect() + " Enemy: " + enemy.getRect());
+
+                entities.setPosX(grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset());
+                entities.setPosY(grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset());
+
+                System.out.println("New enemy position: " + enemy.getPosX() + ", " + enemy.getPosY());
+            }
         }
-
-        if(enemy.getRect().overlaps(player.getRect())) {
-            System.out.println("Collided");
-            System.out.println("Player: " + player.getRect() + " Enemy: " + enemy.getRect());
-
-            enemy.setPosX(grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset());
-            enemy.setPosY(grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset());
-
-            System.out.println("New enemy position: " + enemy.getPosX() + ", " + enemy.getPosY());
-        }
+        
 
 
 
@@ -196,7 +214,7 @@ public class GridScreen extends Scene{
 	{
 
 //		player.movement();
-		player.gridmovement(grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), enemy);
+		player.gridmovement(grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), entityManager.getEntityList());
 
 		//Screen click logic
 //		if (Gdx.input.isTouched()) { // If the user has clicked or tapped the screen
