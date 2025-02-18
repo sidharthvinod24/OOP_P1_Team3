@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public abstract class Entity {
+public abstract class Entity implements iMoveable {
 	
 	private Texture tex;
 	private Rectangle box;
@@ -99,4 +99,8 @@ public abstract class Entity {
 		//Empty
 	}
 	
+	public void movement() 
+	{
+		//Empty
+	}
 } //Class end

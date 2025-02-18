@@ -141,7 +141,7 @@ public class GridScreen extends Scene {
 
 	public void input() {
 		//Player movement
-		player.gridmovement(grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), entityManager.getEntityList());
+		player.movement(grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), entityManager.getEntityList());
 	}
 
 	@Override

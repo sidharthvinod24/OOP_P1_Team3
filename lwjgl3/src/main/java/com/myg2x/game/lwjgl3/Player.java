@@ -70,7 +70,7 @@ public class Player extends Entity {
         updatePressTime.run();
     }
 
-    public void gridmovement(float tileSize, float offset, int gridWidth, int gridHeight, ArrayList<Entity> colliders) {
+    public void movement(float tileSize, float offset, int gridWidth, int gridHeight, ArrayList<Entity> colliders) {
         wasBlocked = false;
 
         if (Gdx.input.isKeyPressed(Keys.LEFT)) {
