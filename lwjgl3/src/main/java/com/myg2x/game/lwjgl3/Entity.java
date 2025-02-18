@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public class Entity {
+public abstract class Entity {
 	
 	private Texture tex;
 	private Rectangle box;
@@ -87,12 +87,6 @@ public class Entity {
 	public float getSpeed()
 	{
 		return speed;
-	}
-	
-	//Movement, draw
-	public void movement()
-	{
-		//Empty
 	}
 	
 	public void draw(SpriteBatch batch)

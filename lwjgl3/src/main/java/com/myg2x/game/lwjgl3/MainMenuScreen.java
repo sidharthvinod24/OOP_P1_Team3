@@ -1,6 +1,5 @@
 package com.myg2x.game.lwjgl3;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -30,16 +29,15 @@ public class MainMenuScreen extends Scene {
 
 		game.batch.begin();
 			//draw text. Remember that x and y are in meters
-			game.font.draw(game.batch, "Team 5 Week 6 Simulation ", 3.5f, 3.5f);
-			game.font.draw(game.batch, "Welcome to Drop!!! ", 1, 1.5f);
-			game.font.draw(game.batch, "Tap anywhere to begin!", 1, 1);
+			game.font.draw(game.batch, "Team 5 Week 6 Simulation ", 3f, 3.5f);
+			game.font.draw(game.batch, "Welcome to our abstract engine!", 3f, 3.f);
+			game.font.draw(game.batch, "Click anywhere to begin!", 3f, 2.5f);
 		game.batch.end();
 
 		//Change to different screen upon left click
 		if (Gdx.input.isTouched()) {
 			//new GameScreen(game) or PhysicsScreen(game) or GridScreen(game)
 			game.SetGridScreen();
-			
 			dispose();
 		}
 		

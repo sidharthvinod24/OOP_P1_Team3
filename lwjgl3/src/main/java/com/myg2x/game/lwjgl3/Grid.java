@@ -1,5 +1,7 @@
 package com.myg2x.game.lwjgl3;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 public class Grid {
 	
 	private int gridWidth;
@@ -32,5 +34,15 @@ public class Grid {
 	public float getTileSize() {
 		return gridTileSize;
 	}
-
+	
+	public void draw(ShapeRenderer shape){
+		for (int row = 0; row < gridHeight - 1; row++) {
+			for (int col = 0; col < gridWidth - 1; col++) {
+				shape.rect(col * gridTileSize + gridOffset,
+						row * gridTileSize + gridOffset, 1, 1);
+			}
+		}
+	}
+	
+	
 }
