@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 
-public class Player extends Entity {
+public class Player extends Entity implements IMovable {
     private float presstimeL = 0;
     private float presstimeR = 0;
     private float presstimeU = 0;
@@ -20,6 +20,18 @@ public class Player extends Entity {
     public Player(float x, float y, float s, Texture t) {
         super(x, y, s, t);
     }
+    
+    @Override
+    public void move(float deltaTime, float tileSize, float offset, int gridWidth, int gridHeight) {
+        // Keep existing player movement logic
+        movement(tileSize, offset, gridWidth, gridHeight, new ArrayList<>());
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        batch.draw(this.getTexture(), this.getPosX(), this.getPosY(), 0.5f, 0.5f);
+    }
+
 
     public boolean checkBlocked() {
         return wasBlocked;
@@ -102,7 +114,5 @@ public class Player extends Entity {
         }
     }
 
-    public void draw(SpriteBatch batch) {
-        batch.draw(this.getTexture(), this.getPosX(), this.getPosY(), 0.5f, 0.5f);
-    }
+
 }

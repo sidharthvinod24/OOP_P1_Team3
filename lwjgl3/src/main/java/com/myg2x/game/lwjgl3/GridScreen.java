@@ -41,7 +41,7 @@ public class GridScreen extends Scene {
 
 		//Add required audio files
 		audioManager = new AudioManager();
-		audioManager.addAudio("backgroundMusic", "16. Thorn in You (Calm_Roar) _【Fire Emblem Fates OST_ Map Themes Mixed】 【HQ 1080p】.mp3", true);
+		audioManager.addAudio("backgroundMusic", "flow-211881.mp3", true);
 		audioManager.addAudio("collision", "collision.mp3", false);
 		audioManager.addAudio("consumed", "consumed.mp3", false);
 		audioManager.playMusic("backgroundMusic", true, 0.0f);
@@ -65,7 +65,7 @@ public class GridScreen extends Scene {
 		collisionManager.addEntity(player);
 
 		// Create 5 enemies/obstacles
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 10; i++) {
 			enemy = new TextureObject(
 					grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset(),
 					grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset(),
@@ -81,62 +81,57 @@ public class GridScreen extends Scene {
 
 	@Override
 	public void render(float delta) {
-		draw();
-		input();
-		logic();
+	    draw();
+	    input();
+	    logic(delta);
+	}
+	private void draw() {
+	    ScreenUtils.clear(0, 0, 0.2f, 1); // Clear screen with dark blue
+
+	    viewport.apply();
+	    batch.setProjectionMatrix(viewport.getCamera().combined);
+
+	    batch.begin();
+	        entityManager.render(batch); // ✅ Draw all entities
+	    batch.end();
+
+	    shape.setProjectionMatrix(viewport.getCamera().combined);
+
+	    shape.begin(ShapeRenderer.ShapeType.Line);
+	        shape.setColor(Color.WHITE);
+	        grid.draw(shape); // ✅ Draw the grid
+	    shape.end();
 	}
 
-	public void draw() {
-		ScreenUtils.clear(0, 0, 0.2f, 1);
-		viewport.apply();
-		batch.setProjectionMatrix(game.viewport.getCamera().combined);
 
-		//Draw entities
-		batch.begin();
-			entityManager.render(batch);
-		batch.end();
+	public void logic(float deltaTime) {
+	    float worldWidth = viewport.getWorldWidth();
+	    float worldHeight = viewport.getWorldHeight();
 
-		shape.setProjectionMatrix(viewport.getCamera().combined);
-		
-		//Draw shapes
-		shape.begin(ShapeType.Line);
-			//Hit-boxes
-//			shape.setColor(Color.RED);
-//			for (Entity entity : entityManager.getEntityList()) {
-//				shape.rect(entity.getRect().getX(), entity.getRect().getY(),
-//						entity.getRect().getWidth(), entity.getRect().getHeight());
-//			}
-			//Grids
-			shape.setColor(Color.WHITE);
-				grid.draw(shape);
-			shape.end();
-	}
+	    // Clamp player within the viewport
+	    player.setPosX(MathUtils.clamp(player.getPosX(), 0, worldWidth - 0.5f));
+	    player.setPosY(MathUtils.clamp(player.getPosY(), 0, worldHeight - 0.5f));
 
-	public void logic() {
-		//Get viewport width and height
-		float worldWidth = viewport.getWorldWidth();
-		float worldHeight = viewport.getWorldHeight();
+	    // Update only movable entities
+	    for (Entity entity : entityManager.getEntityList()) {
+	        if (entity instanceof IMovable) {
+	            ((IMovable) entity).move(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
+	        }
+	    }
 
-		//Clamp player position within the viewport
-		player.setPosX(MathUtils.clamp(player.getPosX(), 0, worldWidth - 0.5f));
-		player.setPosY(MathUtils.clamp(player.getPosY(), 0, worldHeight - 0.5f));
+	    entityManager.update(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 
-		entityManager.update();
+	    // Check for collisions
+	    for (Entity entity : entityManager.getEntityList()) {
+	        if (entity == player) continue;
+	        if (entity.getRect().overlaps(player.getRect())) {
+	            System.out.println("Collided with player!");
+	            entity.setPosX(grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset());
+	            entity.setPosY(grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset());
+	        }
+	    }
 
-		// Check for collision with enemies
-		for (Entity entity : entityManager.getEntityList()) {
-			if (entity == player) {
-				continue;
-			}
-			if (entity.getRect().overlaps(player.getRect())) {
-				System.out.println("Collided");
-				entity.setPosX(grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset());
-				entity.setPosY(grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset());
-			}
-		}
-
-		// Check for collision sounds
-		collisionManager.collisionSound(audioManager, player);
+	    collisionManager.collisionSound(audioManager, player);
 	}
 
 	public void input() {
@@ -164,4 +159,5 @@ public class GridScreen extends Scene {
 		circleImage.dispose();
 		audioManager.dispose();
 	}
+	
 }
