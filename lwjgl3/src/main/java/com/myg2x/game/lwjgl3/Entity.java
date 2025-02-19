@@ -1,5 +1,6 @@
 package com.myg2x.game.lwjgl3;
 
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -89,11 +90,8 @@ public abstract class Entity {
 		return speed;
 	}
 	
-	public void draw(SpriteBatch batch)
-	{
-		//Empty
-	}
-	
+	abstract public void draw(SpriteBatch batch);
+
 	public void draw(ShapeRenderer shape)
 	{
 		//Empty
@@ -103,4 +101,19 @@ public abstract class Entity {
 	{
 		//Empty
 	}
+    protected boolean checkCollision(float newX, float newY, Entity collision) {
+        Rectangle futureRect = new Rectangle(
+                newX,
+                newY,
+                this.getRect().width,
+                this.getRect().height
+        );
+        return Intersector.overlaps(futureRect, collision.getRect());
+    }
+    
+    protected boolean tryMove(float newX, float newY, Entity collision) {
+        boolean wouldCollide = checkCollision(newX, newY, collision);
+
+        return !wouldCollide;
+    }
 } //Class end

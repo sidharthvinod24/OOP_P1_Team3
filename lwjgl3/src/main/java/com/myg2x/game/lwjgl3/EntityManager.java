@@ -14,8 +14,8 @@ public class EntityManager {
     public void update(float deltaTime, float tileSize, float offset, int gridWidth, int gridHeight) {
         for (Entity e : entityList) {
             e.update();
-            if (e instanceof IMovable) {
-                ((IMovable) e).move(deltaTime, tileSize, offset, gridWidth, gridHeight);
+            if (e instanceof TextureObject) {
+                ((TextureObject) e).move(deltaTime, tileSize, offset, gridWidth, gridHeight, this.getEntityList());
             }
         }
     }

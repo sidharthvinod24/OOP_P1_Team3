@@ -44,7 +44,7 @@ public class GridScreen extends Scene {
 		audioManager.addAudio("backgroundMusic", "flow-211881.mp3", true);
 		audioManager.addAudio("collision", "collision.mp3", false);
 		audioManager.addAudio("consumed", "consumed.mp3", false);
-		audioManager.playMusic("backgroundMusic", true, 0.0f);
+		audioManager.playMusic("backgroundMusic", true, 0.1f);
 
 		// Grid initialization
 		grid = new Grid();
@@ -82,7 +82,8 @@ public class GridScreen extends Scene {
 	@Override
 	public void render(float delta) {
 	    draw();
-	    input();
+	    input(delta);
+
 	    logic(delta);
 	}
 	private void draw() {
@@ -105,6 +106,7 @@ public class GridScreen extends Scene {
 
 
 	public void logic(float deltaTime) {
+
 	    float worldWidth = viewport.getWorldWidth();
 	    float worldHeight = viewport.getWorldHeight();
 
@@ -113,30 +115,20 @@ public class GridScreen extends Scene {
 	    player.setPosY(MathUtils.clamp(player.getPosY(), 0, worldHeight - 0.5f));
 
 	    // Update only movable entities
-	    for (Entity entity : entityManager.getEntityList()) {
-	        if (entity instanceof IMovable) {
-	            ((IMovable) entity).move(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
-	        }
-	    }
+
 
 	    entityManager.update(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 
 	    // Check for collisions
-	    for (Entity entity : entityManager.getEntityList()) {
-	        if (entity == player) continue;
-	        if (entity.getRect().overlaps(player.getRect())) {
-	            System.out.println("Collided with player!");
-	            entity.setPosX(grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset());
-	            entity.setPosY(grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset());
-	        }
-	    }
-
+	    
+	    collisionManager.collisionConsume(player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 	    collisionManager.collisionSound(audioManager, player);
 	}
 
-	public void input() {
+	public void input(float deltaTime) {
 		//Player movement
-		player.movement(grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), entityManager.getEntityList());
+		player.move(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), entityManager.getEntityList());
+
 	}
 
 	@Override
