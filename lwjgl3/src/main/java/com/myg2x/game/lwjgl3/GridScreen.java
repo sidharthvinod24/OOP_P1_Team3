@@ -124,8 +124,7 @@ public class GridScreen extends Scene {
         entityManager.update(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 
         // Check for collisions
-        collisionManager.collisionConsume(player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
-        collisionManager.collisionSound(audioManager, player);
+        collisionManager.handleCollision(audioManager, player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
     }
 
     public void input(float deltaTime) {
