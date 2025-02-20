@@ -73,7 +73,7 @@ public class GridScreen extends Scene {
         collisionManager.addEntity(player);
 
         // Create 5 enemies/obstacles
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             enemy = new TextureObject(
                     grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset(),
                     grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset(),
@@ -98,11 +98,11 @@ public class GridScreen extends Scene {
         try {
             ScreenUtils.clear(0, 0, 0.2f, 1); // Clear screen with dark blue
             viewport.apply();
-            batch.setProjectionMatrix(viewport.getCamera().combined);
+            batch.setProjectionMatrix(game.viewport.getCamera().combined);
             batch.begin();
                 entityManager.render(batch); // ✅ Draw all entities
             batch.end();
-            shape.setProjectionMatrix(viewport.getCamera().combined);
+            shape.setProjectionMatrix(game.viewport.getCamera().combined);
             shape.begin(ShapeRenderer.ShapeType.Line);
                 shape.setColor(Color.WHITE);
                 grid.draw(shape); // ✅ Draw the grid
@@ -123,7 +123,7 @@ public class GridScreen extends Scene {
         // Update only movable entities
         entityManager.update(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 
-        // Check for collisions
+        // Check for collisions using teammate's handleCollision method
         collisionManager.handleCollision(audioManager, player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
     }
 
