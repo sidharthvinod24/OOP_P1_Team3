@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -41,7 +40,7 @@ public class GridScreen extends Scene {
 
 		//Add required audio files
 		audioManager = new AudioManager();
-		audioManager.addAudio("backgroundMusic", "flow-211881.mp3", true);
+		audioManager.addAudio("backgroundMusic", "backgroundMusic.mp3", true);
 		audioManager.addAudio("collision", "collision.mp3", false);
 		audioManager.addAudio("consumed", "consumed.mp3", false);
 		audioManager.playMusic("backgroundMusic", true, 0.1f);
