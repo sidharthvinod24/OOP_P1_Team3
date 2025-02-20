@@ -20,12 +20,6 @@ public class Player extends Entity implements IMovable {
     public Player(float x, float y, float s, Texture t) {
         super(x, y, s, t);
     }
-    
-//    @Override
-//    public void move(float deltaTime, float tileSize, float offset, int gridWidth, int gridHeight) {
-//        // Keep existing player movement logic
-//        movement(tileSize, offset, gridWidth, gridHeight, new ArrayList<>());
-//    }
 
     @Override
     public void draw(SpriteBatch batch) {
@@ -44,7 +38,7 @@ public class Player extends Entity implements IMovable {
 
         // Update wasBlocked if there's a collision and shift isn't held
         wasBlocked = wouldCollide && !shiftHeld;
-        
+
         // Allow movement if no collision or shift is held
         return !wouldCollide || shiftHeld;
     }
@@ -52,7 +46,7 @@ public class Player extends Entity implements IMovable {
     private void handleMovement(float dx, float dy, float tileSize, float offset, int gridWidth, int gridHeight,
                                 ArrayList<Entity> colliders, float pressTime, Runnable updatePressTime) {
         if (pressTime == 0.0f || pressTime >= 0.5f) {
-        	
+
             float newX = this.getPosX() + dx;
             float newY = this.getPosY() + dy;
 
@@ -65,14 +59,13 @@ public class Player extends Entity implements IMovable {
             }
 
             if (canMove && newX >= offset && newX < (offset + gridWidth * tileSize) &&
-                    newY >= offset && newY < (offset + gridHeight * tileSize)) {
+                newY >= offset && newY < (offset + gridHeight * tileSize)) {
                 this.setPosX(newX);
                 this.setPosY(newY);
             }
 
         }
-        
-        
+
         updatePressTime.run();
     }
 
@@ -83,7 +76,7 @@ public class Player extends Entity implements IMovable {
             handleMovement(-tileSize, 0, tileSize, offset, gridWidth, gridHeight, colliders, presstimeL,
                     () -> {if(presstimeL > 0.5f) {
                     	presstimeL -= 0.1f;
-                    	} 
+                    	}
                     	presstimeL += delta; });
 
         } else {
@@ -105,7 +98,7 @@ public class Player extends Entity implements IMovable {
             handleMovement(0, tileSize, tileSize, offset, gridWidth, gridHeight, colliders, presstimeU,
                     () -> {if(presstimeU > 0.5f) {
                     	presstimeU -= 0.1f;
-                    	} 
+                    	}
                     	presstimeU += delta; });
         } else {
             presstimeU = 0;
@@ -115,14 +108,14 @@ public class Player extends Entity implements IMovable {
             handleMovement(0, -tileSize, tileSize, offset, gridWidth, gridHeight, colliders, presstimeD,
             		() -> {if(presstimeD > 0.5f) {
             			presstimeD -= 0.1f;
-            			} 
+            			}
             			presstimeD += delta; });
         } else {
             presstimeD = 0;
         }
-        
-        
-        
+
+
+
     }
 
 

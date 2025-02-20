@@ -1,10 +1,6 @@
 package com.myg2x.game.lwjgl3;
-
-
 // This is the code for the Audio class which will be used to manage the independent audio files in the game.
 // Such as background music, sound effects, etc.
-
-
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 

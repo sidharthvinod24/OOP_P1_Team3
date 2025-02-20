@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class CollisionManager {
 
-    private ArrayList<Entity> collisionList;
+    private final ArrayList<Entity> collisionList;
 
     CollisionManager() {
         collisionList = new ArrayList<Entity>();
@@ -18,7 +18,6 @@ public class CollisionManager {
     public void removeEntity(Entity e) {
         collisionList.remove(e);
     }
-
     public void handleCollision(AudioManager audioManager, Player player, float tileSize, float offset, int gridWidth, int gridHeight) {
         Random rand = new Random();
 
@@ -37,7 +36,6 @@ public class CollisionManager {
                 // Move the entity to a new position on the grid
                 entity.setPosX(tileSize * rand.nextInt(gridWidth - 1) + offset);
                 entity.setPosY(tileSize * rand.nextInt(gridHeight - 1) + offset);
-                entity.setSpeed(entity.getSpeed() * 2.0F); // Doubles speed each respawn
             }
         }
     }

@@ -37,7 +37,6 @@ public class MainMenuScreen extends Scene {
 
         //Change to different screen upon left click
         if (Gdx.input.isTouched()) {
-            //new GameScreen(game) or PhysicsScreen(game) or GridScreen(game)
             game.SetGridScreen();
             dispose();
         }

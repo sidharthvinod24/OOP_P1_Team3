@@ -7,13 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public abstract class Entity {
-	
+
 	private Texture tex;
 	private Rectangle box;
-	
+
 	private float posX, posY;
 	private float speed;
-	
+
 	Entity()
 	{
 		tex = null;
@@ -21,7 +21,7 @@ public abstract class Entity {
 		posX = 0;
 		posY = 0;
 		speed = 0;
-		
+
 	}
 	Entity(float x, float y, float s, Texture t)
 	{
@@ -29,20 +29,20 @@ public abstract class Entity {
 		posY = y;
 		speed = s;
 		tex = t;
-		
+
 		box = new Rectangle();
 		box.x = x;
 		box.y = y;
 		box.width = 0.5f;//t.getWidth();
 		box.height = 0.5f;//t.getHeight();
 	}
-	
+
 	public void update()
 	{
 		box.x = posX;
 		box.y = posY;
 	}
-	
+
 	//Get set Texture
 	public Texture getTexture()
 	{
@@ -51,8 +51,8 @@ public abstract class Entity {
 	void setTexture(Texture t)
 	{
 		tex = t;
-	}	
-	
+	}
+
 	//Get set Rectangle
 	public Rectangle getRect()
 	{
@@ -62,6 +62,7 @@ public abstract class Entity {
 	{
 		box = r;
 	}
+
 	//Get set coordinates
 	public float getPosX()
 	{
@@ -79,7 +80,7 @@ public abstract class Entity {
 	{
 		posY = y;
 	}
-	
+
 	//Get set Speed
 	public void setSpeed(float s)
 	{
@@ -89,15 +90,15 @@ public abstract class Entity {
 	{
 		return speed;
 	}
-	
+
 	abstract public void draw(SpriteBatch batch);
 
 	public void draw(ShapeRenderer shape)
 	{
 		//Empty
 	}
-	
-	public void movement() 
+
+	public void movement()
 	{
 		//Empty
 	}
@@ -110,10 +111,11 @@ public abstract class Entity {
         );
         return Intersector.overlaps(futureRect, collision.getRect());
     }
-    
+
     protected boolean tryMove(float newX, float newY, Entity collision) {
         boolean wouldCollide = checkCollision(newX, newY, collision);
 
         return !wouldCollide;
     }
-} //Class end
+}
+//Class end

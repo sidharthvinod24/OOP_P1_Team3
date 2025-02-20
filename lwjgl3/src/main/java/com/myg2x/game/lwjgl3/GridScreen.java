@@ -115,12 +115,9 @@ public class GridScreen extends Scene {
 	    player.setPosY(MathUtils.clamp(player.getPosY(), 0, worldHeight - 0.5f));
 
 	    // Update only movable entities
-
-
 	    entityManager.update(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 
 	    // Check for collisions
-
 	    collisionManager.handleCollision(audioManager,player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 	}
 
