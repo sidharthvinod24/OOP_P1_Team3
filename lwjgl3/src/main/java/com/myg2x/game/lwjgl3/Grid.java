@@ -35,14 +35,16 @@ public class Grid {
 		return gridTileSize;
 	}
 	
-	public void draw(ShapeRenderer shape){
-		for (int row = 0; row < gridHeight - 1; row++) {
-			for (int col = 0; col < gridWidth - 1; col++) {
-				shape.rect(col * gridTileSize + gridOffset,
-						row * gridTileSize + gridOffset, 1, 1);
-			}
-		}
-	}
-	
-	
+    public void draw(ShapeRenderer shape) {
+        try {
+            for (int row = 0; row < gridHeight - 1; row++) {
+                for (int col = 0; col < gridWidth - 1; col++) {
+                    shape.rect(col * gridTileSize + gridOffset,
+                           row * gridTileSize + gridOffset, 1, 1);
+                }
+            }
+        } catch(Exception e) {
+            System.err.println("Error in Grid.draw: " + e.getMessage());
+        }
+    }
 }
