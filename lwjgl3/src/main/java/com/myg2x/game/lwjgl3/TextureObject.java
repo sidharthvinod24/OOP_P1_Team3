@@ -25,7 +25,7 @@ public class TextureObject extends Entity implements IMovable {
             int direction = MathUtils.random(3); // 0 = UP, 1 = DOWN, 2 = LEFT, 3 = RIGHT
             float newX = getPosX();
             float newY = getPosY();
-            
+
             boolean canMove = true;
 
             switch (direction) {

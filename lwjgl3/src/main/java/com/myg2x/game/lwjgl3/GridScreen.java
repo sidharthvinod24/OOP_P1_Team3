@@ -15,12 +15,12 @@ import com.badlogic.gdx.math.MathUtils;
 public class GridScreen extends Scene {
 
 	private final AbstractEngine game;
-	
+
 	private Random rand;
 	private FitViewport viewport;
 	private SpriteBatch batch;
 	private ShapeRenderer shape;
-	
+
 	private EntityManager entityManager;
 	private CollisionManager collisionManager;
 	private AudioManager audioManager;
@@ -32,7 +32,7 @@ public class GridScreen extends Scene {
 	private TextureObject enemy;
 
 	private Grid grid;
-	
+
 
 	public GridScreen(final AbstractEngine game) {
 		this.game = game;
@@ -50,22 +50,22 @@ public class GridScreen extends Scene {
 		grid = new Grid();
 		rand = new Random();
 
-		//Rendering initialization 
+		//Rendering initialization
 		batch = game.batch;
 		shape = game.shape;
 		viewport = game.viewport;
 
 		squareImage = new Texture(Gdx.files.internal("Square.png"));
 		circleImage = new Texture(Gdx.files.internal("Circle.png"));
-		
-		
+
+
 		player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
 
 		entityManager.addEntity(player);
 		collisionManager.addEntity(player);
 
 		// Create 5 enemies/obstacles
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 5; i++) {
 			enemy = new TextureObject(
 					grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset(),
 					grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset(),
@@ -120,9 +120,8 @@ public class GridScreen extends Scene {
 	    entityManager.update(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 
 	    // Check for collisions
-	    
-	    collisionManager.collisionConsume(player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
-	    collisionManager.collisionSound(audioManager, player);
+
+	    collisionManager.handleCollision(audioManager,player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 	}
 
 	public void input(float deltaTime) {
@@ -151,5 +150,5 @@ public class GridScreen extends Scene {
 		circleImage.dispose();
 		audioManager.dispose();
 	}
-	
+
 }
