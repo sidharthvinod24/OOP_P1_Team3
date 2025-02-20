@@ -1,5 +1,6 @@
 package com.myg2x.game.lwjgl3;
 
+import java.util.ArrayList;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
 
@@ -38,12 +39,17 @@ public class GridScreen extends Scene {
 		entityManager = new EntityManager();
 		collisionManager = new CollisionManager();
 
-		//Add required audio files
 		audioManager = new AudioManager();
-		audioManager.addAudio("backgroundMusic", "backgroundMusic.mp3", true);
-		audioManager.addAudio("collision", "collision.mp3", false);
-		audioManager.addAudio("consumed", "consumed.mp3", false);
-		audioManager.playMusic("backgroundMusic", true, 0.1f);
+		//Add required audio files
+		try {
+			audioManager.addAudio("backgroundMusic", "backgroundMusic.mp3", true);
+			audioManager.addAudio("collision", "collision.mp3", false);
+			audioManager.addAudio("consumed", "consumed.mp3", false);
+			audioManager.playMusic("backgroundMusic", true, 0.1f);
+		} catch (Exception e) {
+			System.err.println("Error initializing audio: " + e.getMessage());
+		}
+
 
 		// Grid initialization
 		grid = new Grid();
@@ -53,9 +59,16 @@ public class GridScreen extends Scene {
 		batch = game.batch;
 		shape = game.shape;
 		viewport = game.viewport;
-
-		squareImage = new Texture(Gdx.files.internal("Square.png"));
-		circleImage = new Texture(Gdx.files.internal("Circle.png"));
+		try {
+			squareImage = new Texture(Gdx.files.internal("Square.png"));
+		} catch (Exception e) {
+			System.err.println("Error loading Square.png: " + e.getMessage());
+		}
+		try {
+			circleImage = new Texture(Gdx.files.internal("Circle.png"));
+		} catch (Exception e) {
+			System.err.println("Error loading Circle.png: " + e.getMessage());
+		}
 
 
 		player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
@@ -86,21 +99,21 @@ public class GridScreen extends Scene {
 	    logic(delta);
 	}
 	private void draw() {
-	    ScreenUtils.clear(0, 0, 0.2f, 1); // Clear screen with dark blue
-
-	    viewport.apply();
-	    batch.setProjectionMatrix(viewport.getCamera().combined);
-
-	    batch.begin();
-	        entityManager.render(batch); // ✅ Draw all entities
-	    batch.end();
-
-	    shape.setProjectionMatrix(viewport.getCamera().combined);
-
-	    shape.begin(ShapeRenderer.ShapeType.Line);
-	        shape.setColor(Color.WHITE);
-	        grid.draw(shape); // ✅ Draw the grid
-	    shape.end();
+		try {
+			ScreenUtils.clear(0, 0, 0.2f, 1); // Clear screen with dark blue
+			viewport.apply();
+			batch.setProjectionMatrix(viewport.getCamera().combined);
+			batch.begin();
+			entityManager.render(batch); // ✅ Draw all entities
+			batch.end();
+			shape.setProjectionMatrix(viewport.getCamera().combined);
+			shape.begin(ShapeRenderer.ShapeType.Line);
+			shape.setColor(Color.WHITE);
+			grid.draw(shape); // ✅ Draw the grid
+			shape.end();
+		} catch (Exception e) {
+			System.err.println("Error in draw: " + e.getMessage());
+		}
 	}
 
 
@@ -122,7 +135,11 @@ public class GridScreen extends Scene {
 
 	public void input(float deltaTime) {
 		//Player movement
-		player.move(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), entityManager.getEntityList());
+		try {
+			player.move(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), (ArrayList<Entity>) entityManager.getEntityList());
+		} catch (Exception e) {
+			System.err.println("Error processing input: " + e.getMessage());
+		}
 
 	}
 
@@ -140,11 +157,30 @@ public class GridScreen extends Scene {
 
 	@Override
 	public void dispose() {
-		batch.dispose();
-		shape.dispose();
-		squareImage.dispose();
-		circleImage.dispose();
-		audioManager.dispose();
+		try {
+			batch.dispose();
+		} catch (Exception e) {
+			System.err.println("Error disposing batch: " + e.getMessage());
+		}
+		try {
+			shape.dispose();
+		} catch (Exception e) {
+			System.err.println("Error disposing shape: " + e.getMessage());
+		}
+		try {
+			squareImage.dispose();
+		} catch (Exception e) {
+			System.err.println("Error disposing squareImage: " + e.getMessage());
+		}
+		try {
+			circleImage.dispose();
+		} catch (Exception e) {
+			System.err.println("Error disposing circleImage: " + e.getMessage());
+		}
+		try {
+			audioManager.dispose();
+		} catch (Exception e) {
+			System.err.println("Error disposing audioManager: " + e.getMessage());
+		}
 	}
-
 }

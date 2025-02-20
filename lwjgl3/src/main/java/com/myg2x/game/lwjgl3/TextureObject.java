@@ -2,13 +2,9 @@ package com.myg2x.game.lwjgl3;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 
 public class TextureObject extends Entity implements IMovable {
     private float moveTimer = 0; // Timer for movement intervals
@@ -38,7 +34,7 @@ public class TextureObject extends Entity implements IMovable {
             // Ensure movement stays within grid boundaries an collision detection
 
             for (Entity e : colliders) {
-            	if (this != e && !tryMove(newX, newY, e)) {
+            	if (this != e && tryMove(newX, newY, e)) {
             		canMove = false;
             		break;
             	}
@@ -52,7 +48,6 @@ public class TextureObject extends Entity implements IMovable {
             moveTimer = 0; // Reset timer
         }
     }
-
 
     @Override
     public void draw(SpriteBatch batch) {

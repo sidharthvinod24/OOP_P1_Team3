@@ -12,7 +12,12 @@ public class CollisionManager {
     }
 
     public void addEntity(Entity e) {
+        if (e == null) {
+            System.err.println("Attempted to add null entity to collision list.");
+            return;
+        }
         collisionList.add(e);
+
     }
 
     public void removeEntity(Entity e) {

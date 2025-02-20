@@ -1,12 +1,10 @@
 package com.myg2x.game.lwjgl3;
 
-import com.badlogic.gdx.math.Rectangle;
 import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Intersector;
 
 public class Player extends Entity implements IMovable {
     private float presstimeL = 0;
@@ -40,7 +38,7 @@ public class Player extends Entity implements IMovable {
         wasBlocked = wouldCollide && !shiftHeld;
 
         // Allow movement if no collision or shift is held
-        return !wouldCollide || shiftHeld;
+        return wouldCollide && !shiftHeld;
     }
 
     private void handleMovement(float dx, float dy, float tileSize, float offset, int gridWidth, int gridHeight,
@@ -52,7 +50,7 @@ public class Player extends Entity implements IMovable {
 
             boolean canMove = true;
             for (Entity e : colliders) {
-                if (this != e && !tryMove(newX, newY, e)) {
+                if (this != e && tryMove(newX, newY, e)) {
                     canMove = false;
                     break;
                 }

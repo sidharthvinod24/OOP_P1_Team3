@@ -11,42 +11,66 @@ public class Audio {
 
     public Audio(String path,boolean isMusic){
         if (path == null || path.isEmpty()) {
-            return;
+            throw new IllegalArgumentException("Path cannot be null or empty.");
         }
-        if (isMusic) {
-            this.music = com.badlogic.gdx.Gdx.audio.newMusic(com.badlogic.gdx.Gdx.files.internal(path));
-        } else {
-            this.soundEffect = com.badlogic.gdx.Gdx.audio.newSound(com.badlogic.gdx.Gdx.files.internal(path));
+        try {
+            if (isMusic) {
+                this.music = com.badlogic.gdx.Gdx.audio.newMusic(com.badlogic.gdx.Gdx.files.internal(path));
+            } else {
+                this.soundEffect = com.badlogic.gdx.Gdx.audio.newSound(com.badlogic.gdx.Gdx.files.internal(path));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load audio: " + path, e);
         }
+
     }
 
     public void playMusic(boolean loop, float volume) {
-        if (this.music != null) {
-            this.music.setLooping(loop);
-            this.music.setVolume( volume);
-            this.music.play();
+        try{
+            if (this.music != null) {
+                this.music.setLooping(loop);
+                this.music.setVolume( volume);
+                this.music.play();
+            }
+        }catch (Exception e){
+            System.err.println("Error playing music: " + e.getMessage());
         }
     }
 
     public void playSoundEffect(float volume) {
-        if (this.soundEffect != null) {
-            this.soundEffect.play(volume);
+        try {
+            if (this.soundEffect != null) {
+                this.soundEffect.play(volume);
+            }
+        } catch (Exception e) {
+            System.err.println("Error playing sound effect: " + e.getMessage());
         }
     }
 
     public void stopMusic() {
-        if (this.music != null) {
-            this.music.stop();
+        try {
+            if (this.music != null) {
+                this.music.stop();
+            }
+        } catch (Exception e) {
+            System.err.println("Error stopping music: " + e.getMessage());
         }
     }
 
     public void dispose() {
-        if (this.music != null) {
-            this.music.dispose();
+        try {
+            if (this.music != null) {
+                this.music.dispose();
+            }
+        } catch (Exception e) {
+            System.err.println("Error disposing music: " + e.getMessage());
         }
-        if (this.soundEffect != null) {
-            this.soundEffect.dispose();
+        try {
+            if (this.soundEffect != null) {
+                this.soundEffect.dispose();
+            }
+        } catch (Exception e) {
+            System.err.println("Error disposing sound effect: " + e.getMessage());
         }
     }
-
 }

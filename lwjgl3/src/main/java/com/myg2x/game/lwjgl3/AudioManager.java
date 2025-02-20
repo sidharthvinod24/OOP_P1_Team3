@@ -34,6 +34,7 @@ public class AudioManager {
             audio.playSoundEffect(volume);
         }
     }
+
     // Stop music
     public void stopMusic(String name) {
         Audio audio = audioMap.get(name);
@@ -41,12 +42,11 @@ public class AudioManager {
             audio.stopMusic();
         }
     }
+
     // Dispose all audio
     public void dispose() {
         for (Audio audio : audioMap.values()) {
             audio.dispose();
         }
     }
-
-
 }

@@ -113,9 +113,7 @@ public abstract class Entity {
     }
 
     protected boolean tryMove(float newX, float newY, Entity collision) {
-        boolean wouldCollide = checkCollision(newX, newY, collision);
-
-        return !wouldCollide;
+        return checkCollision(newX, newY, collision);
     }
 }
 //Class end
