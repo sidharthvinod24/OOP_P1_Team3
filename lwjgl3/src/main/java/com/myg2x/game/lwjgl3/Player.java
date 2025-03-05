@@ -1,5 +1,6 @@
 package com.myg2x.game.lwjgl3;
 
+
 import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -14,21 +15,22 @@ public class Player extends Entity implements IMovable {
 
     // Return value indicates if movement was blocked by collision
     public boolean wasBlocked = false;
-
-    public Player(float x, float y, float s, Texture t) {
+    
+    private KeyBindingManager keyBindingManager;
+   
+    public Player(KeyBindingManager keyBindingManager ,float x, float y, float s, Texture t) {
         super(x, y, s, t);
+        this.keyBindingManager = keyBindingManager;
     }
-
+    
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(this.getTexture(), this.getPosX(), this.getPosY(), 0.5f, 0.5f);
     }
-
-
+    
     public boolean checkBlocked() {
         return wasBlocked;
     }
-
 
     protected boolean tryMove(float newX, float newY, Entity collision) {
         boolean wouldCollide = checkCollision(newX, newY, collision);
@@ -70,7 +72,7 @@ public class Player extends Entity implements IMovable {
     public void move(float delta, float tileSize, float offset, int gridWidth, int gridHeight, ArrayList<Entity> colliders) {
         wasBlocked = false;
 
-        if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(keyBindingManager.getKeyBinding("LEFT"))) {
             handleMovement(-tileSize, 0, tileSize, offset, gridWidth, gridHeight, colliders, presstimeL,
                     () -> {if(presstimeL > 0.5f) {
                     	presstimeL -= 0.1f;
@@ -81,7 +83,7 @@ public class Player extends Entity implements IMovable {
             presstimeL = 0;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(keyBindingManager.getKeyBinding("RIGHT"))) {
             handleMovement(tileSize, 0, tileSize, offset, gridWidth, gridHeight, colliders, presstimeR,
                     () -> {if(presstimeR > 0.5f) {
                     	presstimeR -= 0.1f;
@@ -92,7 +94,7 @@ public class Player extends Entity implements IMovable {
             presstimeR = 0;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.UP)) {
+        if (Gdx.input.isKeyPressed(keyBindingManager.getKeyBinding("UP"))) {
             handleMovement(0, tileSize, tileSize, offset, gridWidth, gridHeight, colliders, presstimeU,
                     () -> {if(presstimeU > 0.5f) {
                     	presstimeU -= 0.1f;
@@ -102,7 +104,7 @@ public class Player extends Entity implements IMovable {
             presstimeU = 0;
         }
 
-        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(keyBindingManager.getKeyBinding("DOWN"))) {
             handleMovement(0, -tileSize, tileSize, offset, gridWidth, gridHeight, colliders, presstimeD,
             		() -> {if(presstimeD > 0.5f) {
             			presstimeD -= 0.1f;

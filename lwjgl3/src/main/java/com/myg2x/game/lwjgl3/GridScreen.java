@@ -32,7 +32,7 @@ public class GridScreen extends Scene {
 	private TextureObject enemy;
 
 	private Grid grid;
-
+	private KeyBindingManager keyBindingManager;
 
 	public GridScreen(final AbstractEngine game) {
 		this.game = game;
@@ -40,6 +40,8 @@ public class GridScreen extends Scene {
 		collisionManager = new CollisionManager();
 
 		audioManager = new AudioManager();
+		
+		keyBindingManager = new KeyBindingManager();
 		//Add required audio files
 		try {
 			audioManager.addAudio("backgroundMusic", "backgroundMusic.mp3", true);
@@ -71,7 +73,7 @@ public class GridScreen extends Scene {
 		}
 
 
-		player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
+		player = new Player(keyBindingManager, grid.getOffset(), grid.getOffset(), 4.f, circleImage);
 
 		entityManager.addEntity(player);
 		collisionManager.addEntity(player);
