@@ -44,15 +44,18 @@ public class AbstractEngine extends Game{
 		super.render(); // important!
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+
             if (getScreen() == keyBindingScreen) {
                 // If already in key binding menu, exit it without forcing a bind
                 SetMenuScreen();
                 isRebinding = false;
-            } else {
+                
+            } else if(getScreen() == gridScreen){
                 // Open key binding menu
                 SetKeyBindingScreen();
                 isRebinding = true;
             }
+
         }
 	}
 

@@ -59,7 +59,6 @@ public class KeyBindingScreen extends Scene {
 		// Esc pressed then exit to menu without binding a key
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
         	System.out.println("Returning to Main Menu...");
-            game.SetMenuScreen();
             return;
         }
         

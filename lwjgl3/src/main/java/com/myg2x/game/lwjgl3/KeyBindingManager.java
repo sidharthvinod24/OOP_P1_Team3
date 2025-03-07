@@ -24,9 +24,11 @@ public class KeyBindingManager {
     
     public void rebindKey(String action, int newKey) {
         keyBindings.put(action, newKey);
+
     }
 
     public int getKeyBinding(String action) {
+
         return keyBindings.getOrDefault(action, Keys.UNKNOWN);
     }
 }
