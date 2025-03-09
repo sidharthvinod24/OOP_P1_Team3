@@ -17,6 +17,7 @@ public class AbstractEngine extends Game{
 
 	private MainMenuScreen menuScene;
 	private GridScreen gridScreen;
+	private EquationScreen equationScreen;
 	private KeyBindingScreen keyBindingScreen;
 	private KeyBindingManager keyBindingManager;
 	
@@ -37,6 +38,7 @@ public class AbstractEngine extends Game{
 		keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
 		menuScene = new MainMenuScreen(this);
 		gridScreen = new GridScreen(this);
+		equationScreen = new EquationScreen(this);
 		SetMenuScreen();
 	}
 
@@ -68,6 +70,11 @@ public class AbstractEngine extends Game{
 	{
 		this.setScreen(gridScreen);
 	}
+	public void SetEquationScreen()
+	{
+		this.setScreen(equationScreen);
+	}
+	
 	public void SetKeyBindingScreen()
 	{
 		this.setScreen(keyBindingScreen);

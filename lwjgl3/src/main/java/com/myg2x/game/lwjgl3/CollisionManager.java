@@ -23,7 +23,7 @@ public class CollisionManager {
     public void removeEntity(Entity e) {
         collisionList.remove(e);
     }
-    public void handleCollision(AudioManager audioManager, Player player, float tileSize, float offset, int gridWidth, int gridHeight) {
+    public void handleCollision(AudioManager audioManager, Player player, float tileSize, float offset, int gridWidth, int gridHeight, AbstractEngine game) {
        if (audioManager == null || player == null) {
             System.err.println("AudioManager or Player is null");
         }
@@ -53,6 +53,7 @@ public class CollisionManager {
                         // Move the entity to a new position on the grid
                         entity.setPosX(tileSize * rand.nextInt(gridWidth - 1) + offset);
                         entity.setPosY(tileSize * rand.nextInt(gridHeight - 1) + offset);
+                        game.SetEquationScreen();
                     }
                 }
             }

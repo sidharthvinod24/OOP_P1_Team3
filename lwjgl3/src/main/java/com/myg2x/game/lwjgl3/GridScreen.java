@@ -3,7 +3,7 @@ package com.myg2x.game.lwjgl3;
 import java.util.ArrayList;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
-
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -120,7 +120,11 @@ public class GridScreen extends Scene {
 
 
 	public void logic(float deltaTime) {
-
+		
+		if (Gdx.input.isKeyPressed(Keys.Q)) {
+            game.SetEquationScreen();
+            //dispose();
+        }
 	    float worldWidth = viewport.getWorldWidth();
 	    float worldHeight = viewport.getWorldHeight();
 
@@ -132,7 +136,7 @@ public class GridScreen extends Scene {
 	    entityManager.update(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
 
 	    // Check for collisions
-	    collisionManager.handleCollision(audioManager,player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
+	    collisionManager.handleCollision(audioManager,player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), game);
 	}
 
 	public void input(float deltaTime) {
