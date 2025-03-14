@@ -61,10 +61,10 @@ public class EquationScreen extends Scene {
 
         batch.begin();
         //draw text. Remember that x and y are in meters
-        batch.draw(overlay, 175, 125, 450, 250);
-        font.draw(batch, question, 225, 325);
-        font.draw(batch, "ANS: ", 225, 237.5f);
-        font.draw(batch, reply, 350, 237.5f);
+        	batch.draw(overlay, 175, 125, 450, 250);
+	        font.draw(batch, question, 225, 325);
+	        font.draw(batch, "ANS: ", 225, 237.5f);
+	        font.draw(batch, reply, 350, 237.5f);
         batch.end();
 		
 	}

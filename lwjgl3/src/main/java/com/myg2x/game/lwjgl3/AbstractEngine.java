@@ -2,6 +2,7 @@ package com.myg2x.game.lwjgl3;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,12 +14,15 @@ public class AbstractEngine extends Game{
 	public SpriteBatch batch;
 	public ShapeRenderer shape;
 	public BitmapFont font;
+	public OrthographicCamera camera;
 	public FitViewport viewport;
 
 	private MainMenuScreen menuScene;
 	private GridScreen gridScreen;
 	private EquationScreen equationScreen;
 	private KeyBindingScreen keyBindingScreen;
+	private PauseScreen pauseScreen;
+	
 	private KeyBindingManager keyBindingManager;
 	
 	private boolean isRebinding = false; // Track if the key binding screen is active
@@ -28,17 +32,22 @@ public class AbstractEngine extends Game{
 		shape =  new ShapeRenderer();
 		// use libGDX's default font
 		font = new BitmapFont();
-		viewport = new FitViewport(8, 5);
+		
+		//camera.setToOrtho(false, 1080, 1920);
+		viewport = new FitViewport(800, 500);
 		
 		//font has 15pt, but we need to scale it to our viewport by ratio of viewport height to screen height
 		font.setUseIntegerPositions(false);
 		
 		//Initialize scenes
 		keyBindingManager = new KeyBindingManager(); 
+		
 		keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
 		menuScene = new MainMenuScreen(this);
 		gridScreen = new GridScreen(this);
 		equationScreen = new EquationScreen(this);
+		pauseScreen = new PauseScreen(this);
+		
 		SetMenuScreen();
 	}
 
@@ -78,6 +87,11 @@ public class AbstractEngine extends Game{
 	public void SetKeyBindingScreen()
 	{
 		this.setScreen(keyBindingScreen);
+	}
+	
+	public void SetPauseScreen()
+	{
+		this.setScreen(pauseScreen);
 	}
 
 

@@ -33,7 +33,7 @@ public class GridScreen extends Scene {
 
 	private Grid grid;
 	private KeyBindingManager keyBindingManager;
-
+	
 	public GridScreen(final AbstractEngine game) {
 		this.game = game;
 		entityManager = new EntityManager();
@@ -105,13 +105,16 @@ public class GridScreen extends Scene {
 			ScreenUtils.clear(0, 0, 0.2f, 1); // Clear screen with dark blue
 			viewport.apply();
 			batch.setProjectionMatrix(viewport.getCamera().combined);
+			
 			batch.begin();
-			entityManager.render(batch); // ✅ Draw all entities
+				entityManager.render(batch); // ✅ Draw all entities
 			batch.end();
+			
 			shape.setProjectionMatrix(viewport.getCamera().combined);
+			
 			shape.begin(ShapeRenderer.ShapeType.Line);
-			shape.setColor(Color.WHITE);
-			grid.draw(shape); // ✅ Draw the grid
+				shape.setColor(Color.WHITE);
+				grid.draw(shape); // ✅ Draw the grid
 			shape.end();
 		} catch (Exception e) {
 			System.err.println("Error in draw: " + e.getMessage());
@@ -125,6 +128,10 @@ public class GridScreen extends Scene {
             game.SetEquationScreen();
             //dispose();
         }
+		else if (Gdx.input.isKeyPressed(Keys.O))
+		{
+			game.SetPauseScreen();
+		}
 	    float worldWidth = viewport.getWorldWidth();
 	    float worldHeight = viewport.getWorldHeight();
 

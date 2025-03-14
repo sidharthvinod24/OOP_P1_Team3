@@ -25,7 +25,7 @@ public class Player extends Entity implements IMovable {
     
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(this.getTexture(), this.getPosX(), this.getPosY(), 0.5f, 0.5f);
+        batch.draw(this.getTexture(), this.getPosX(), this.getPosY(), 50f, 50f);
     }
     
     public boolean checkBlocked() {

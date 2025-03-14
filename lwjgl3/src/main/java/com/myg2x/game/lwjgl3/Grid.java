@@ -13,10 +13,10 @@ public class Grid {
 
 
 	Grid() {
-		gridWidth = 15;
-		gridHeight = 9;
-		gridOffset = 0.25f;
-		gridTileSize = 0.5f;
+		gridWidth = 15; //15
+		gridHeight = 9; //9
+		gridOffset = 25f; //0.25
+		gridTileSize = 50f; //0.5
 		grid = new int[gridWidth][gridHeight];
 	}
 
@@ -41,7 +41,7 @@ public class Grid {
 			for (int row = 0; row < gridHeight - 1; row++) {
 				for (int col = 0; col < gridWidth - 1; col++) {
 					shape.rect(col * gridTileSize + gridOffset,
-							row * gridTileSize + gridOffset, 1, 1);
+							row * gridTileSize + gridOffset, 100, 100); //100 100
 				}
 			}
 		} catch(Exception e) {
