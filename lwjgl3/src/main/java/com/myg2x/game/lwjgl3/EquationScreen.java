@@ -31,6 +31,7 @@ public class EquationScreen extends Scene {
     private String reply = "";
     private String question = "";
     private List<Object> equation;
+    private ArrayList<Character> operators;
     
     public EquationScreen(final AbstractEngine game) {
     	grid = new Grid();
@@ -39,17 +40,21 @@ public class EquationScreen extends Scene {
         
         rand = new Random();
         
-        font = new BitmapFont(Gdx.files.internal("chalk.fnt"),
-                Gdx.files.internal("chalk.png"), false);
+        font = new BitmapFont(Gdx.files.internal("atalon.fnt"),
+                Gdx.files.internal("atalon.png"), false);
         
         font.getData().setScale(1.5f);
         overlay = new Texture(Gdx.files.internal("testborder.png"));
         
+        operators = new ArrayList<Character>();
+		operators.add('+');
+		operators.add('-');
+		operators.add('*');
+		operators.add('/');
+
         equation = RandomiseEqn();
         question = (String) equation.get(0);
         answer = Integer.toString((int) equation.get(1));
-        
-        
     }
     
 
@@ -124,13 +129,9 @@ public class EquationScreen extends Scene {
 		char required;
 		int randomiser;
 		//TEMPORARY FOR RANDOMISING TESTING
-		ArrayList<Character> operators = new ArrayList<Character>();
-		operators.add('+');
-		operators.add('-');
-		operators.add('*');
-		operators.add('/');
 		
-		randomiser = rand.nextInt(14);
+		
+		randomiser = rand.nextInt(0, 14);
 		
 		if (randomiser < 10) {
 			required = (char) randomiser;
@@ -140,19 +141,18 @@ public class EquationScreen extends Scene {
 			required = operators.get(randomiser-10);
 		}
 		
-		if(rand.nextInt(2) == 1) {
-			return MakeEqn('+');
-		}
-		return MakeEqn('-');
+		
+		return MakeEqn(required);
 	}
 	
 	public List<Object> MakeEqn(char required) {
 		String eqn = "";
 		int ans = 0;
 		
+		// determine requirement, operators or numbers
 		if(required == '-' || required == '+') {
-			int num1 = rand.nextInt(0, 99);
-			int num2 = rand.nextInt(0, 99);
+			int num1 = rand.nextInt(1, 100);
+			int num2 = rand.nextInt(1, 100);
 			
 			if(required == '+') {
 				eqn = num1 + "" + required + "" + num2; 
@@ -164,11 +164,121 @@ public class EquationScreen extends Scene {
 				eqn = Math.max(num1, num2) + "" + required + "" + Math.min(num1, num2);
 				ans = Math.max(num1, num2) - Math.min(num1, num2);
 			}
+		}
 			
+		else if(required == '*') {
+			int num1 = rand.nextInt(1, 20);
+			int num2 = rand.nextInt(1, 20);
+			
+			eqn = num1 + "" + "×" + "" + num2;
+			ans = num1 * num2;
+		}
+		
+		else if(required == '/') {
+			int num1 = rand.nextInt(1, 10);
+			int num2 = num1 * rand.nextInt(2, 20);
+			
+			eqn = num2 + "" + "÷" + "" + num1;
+			ans = num2 / num1;
 		}
 		
 		
+		else {
+			int num1;
+			int num2;
+			System.out.print("REQURED:");
+			System.out.println((int) required);
+			
+			switch (rand.nextInt(4)) { // randomise operation
+			case 0: // addition
+				
+				if((int) required == 0) {
+					num1 = rand.nextInt(1, 10) * 10 + (int) required;
+				}
+				else if(rand.nextInt(2) == 0) { 
+					num1 = rand.nextInt(0, 10) * 10 + (int) required;
+				}
+				else {
+					num1 = (int) required * 10 + rand.nextInt(0, 10);
+				}
+				
+				num2 = rand.nextInt(1, 100);
+				eqn = num1 + "" + "+" + "" + num2; 
+				ans = num1 + num2;
+
+				break;
+				
+			case 1: // subtraction
+				
+				if((int) required == 0) {
+					num1 = rand.nextInt(1, 10) * 10 + (int) required;
+				}
+				else if(rand.nextInt(2) == 0) {
+					num1 = rand.nextInt(0, 10) * 10 + (int) required;
+				}
+				else {
+					num1 = (int) required * 10 + rand.nextInt(0, 10);
+				}
+
+				num2 = rand.nextInt(1, 100);
+				
+				eqn = Math.max(num1, num2) + "" + "-" + "" + Math.min(num1, num2);
+				ans = Math.max(num1, num2) - Math.min(num1, num2);
+				
+				break;
+				
+			case 2: // multiplication
+				
+				if((int) required == 0) { // 0
+					num1 = rand.nextInt(1, 3) * 10 + (int) required;
+				}
+				else if ((int) required <= 2) { // 1 or 2
+					if(rand.nextInt(2) == 0) {
+						if((int) required == 1) { // 1 leading
+							num1 = (int) required * 10 + rand.nextInt(0, 10);
+						}
+						else { // 2 leading
+							num1 = (int) required * 10;
+						}
+					}
+					else { // 2 trailing
+						num1 = rand.nextInt(0, 1) * 10 + (int) required;
+					}
+				}
+				
+				else { // 3 to 9
+					num1 = rand.nextInt(0, 1) * 10 + (int) required;
+
+				}
+				
+				num2 = rand.nextInt(1, 20);
+				
+				eqn = num1 + "" + "×" + "" + num2;
+				ans = num1 * num2;
+				
+				break;
+				
+			case 3: // division
+				
+				if((int) required == 0) {
+					num2 = rand.nextInt(1, 10) * 10;
+					num1 = num2 / 10;
+				}
+				
+				else {
+					num1 = (int) required;
+					num2 = num1 * rand.nextInt(2, 20);
+				}
+				
+				eqn = num2 + "" + "÷" + "" + num1;
+				ans = num2 / num1;
+				
+				break;
+				
+			}
+		}
 		
+
 		
 		eqn += "=?";
 		System.out.println(eqn);
