@@ -73,16 +73,26 @@ public class EquationScreen extends Scene {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                // Check if the key is a number (0-9) or backspace
-                if (keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9 && reply.length() < 4) {
-                    // System.out.println("Pressed: " + Input.Keys.toString(keycode));
-                    reply += Input.Keys.toString(keycode);
+                // Acts as a placeholder if number is not pressed
+                int number = -1;
+
+                if (keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9) {
+                    number = keycode - Input.Keys.NUM_0;  // Convert NUM_0-9 to 0-9
+                } else if (keycode >= Input.Keys.NUMPAD_0 && keycode <= Input.Keys.NUMPAD_9) {
+                    number = keycode - Input.Keys.NUMPAD_0; // Convert NUMPAD_0-9 to 0-9
+                }
+
+                // Ensures that the correct number is added to the reply
+                if (number != -1 && reply.length() < 4) {
+                    reply += number; // Append only the number
+                    System.out.println("Pressed: " + number);
                     return true; // Input handled
-                } else if (keycode == Input.Keys.BACKSPACE) {
-                    // System.out.println("Pressed: " + Input.Keys.toString(keycode));
-                    if (!reply.isEmpty()) {
-                        reply = reply.substring(0, reply.length() - 1);
                     }
+                else if (keycode == Input.Keys.BACKSPACE) {
+                        // System.out.println("Pressed: " + Input.Keys.toString(keycode));
+                        if (!reply.isEmpty()) {
+                            reply = reply.substring(0, reply.length() - 1);
+                        }
                 } else if (keycode == Input.Keys.ENTER) {
                     if (!reply.isEmpty()) {
                         if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
