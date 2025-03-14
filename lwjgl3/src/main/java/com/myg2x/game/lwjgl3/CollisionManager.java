@@ -55,7 +55,8 @@ public class CollisionManager {
                         // Move the entity to a new position on the grid
                         entity.setPosX(tileSize * rand.nextInt(gridWidth - 1) + offset);
                         entity.setPosY(tileSize * rand.nextInt(gridHeight - 1) + offset);
-                        game.SetEquationScreen();
+//                        game.SetEquationScreen();
+                        game.SetEquationScreenWithValue(mathEntity.getValue());
                     }
                 }
             }

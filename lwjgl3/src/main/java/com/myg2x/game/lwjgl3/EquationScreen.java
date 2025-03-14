@@ -9,12 +9,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class EquationScreen extends Scene {
 
@@ -30,29 +28,31 @@ public class EquationScreen extends Scene {
     private String answer = "";
     private String reply = "";
     private String question = "";
+    private String value;
     private List<Object> equation;
 
-    public EquationScreen(final AbstractEngine game) {
+    public EquationScreen(final AbstractEngine game, String value) {
+        this.value = value;
         grid = new Grid();
         this.game = game;
         batch = new SpriteBatch();
 
         rand = new Random();
 
-        font = new BitmapFont(Gdx.files.internal("chalk.fnt"),
-            Gdx.files.internal("chalk.png"), false);
+        font = new BitmapFont(Gdx.files.internal("Atalon.fnt"),
+            Gdx.files.internal("Atalon.png"), false);
 
         font.getData().setScale(1.5f);
         overlay = new Texture(Gdx.files.internal("testborder.png"));
 
-        equation = RandomiseEqn();
+        equation = RandomiseEqn(value);
         question = (String) equation.get(0);
         answer = Integer.toString((int) equation.get(1));
     }
 
     @Override
     public void render(float delta) {
-        logic(delta);
+        logic(delta,value);
 
         batch.begin();
         // draw text. Remember that x and y are in meters
@@ -63,7 +63,7 @@ public class EquationScreen extends Scene {
         batch.end();
     }
 
-    public void logic(float delta) {
+    public void logic(float delta, String value) {
         // RandomiseEqn();
         if (Gdx.input.isKeyPressed(Keys.A)) {
             game.SetGridScreen();
@@ -80,11 +80,11 @@ public class EquationScreen extends Scene {
                     return true; // Input handled
                 } else if (keycode == Input.Keys.BACKSPACE) {
                     // System.out.println("Pressed: " + Input.Keys.toString(keycode));
-                    if (reply.length() > 0) {
+                    if (!reply.isEmpty()) {
                         reply = reply.substring(0, reply.length() - 1);
                     }
                 } else if (keycode == Input.Keys.ENTER) {
-                    if (reply.length() > 0) {
+                    if (!reply.isEmpty()) {
                         if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
                             System.out.println("CORRECT!!!");
                         } else {
@@ -92,7 +92,7 @@ public class EquationScreen extends Scene {
                         }
                         game.SetGridScreen();
 
-                        equation = RandomiseEqn();
+                        equation = RandomiseEqn(value);
                         question = (String) equation.get(0);
                         answer = Integer.toString((int) equation.get(1));
                         reply = "";
@@ -103,10 +103,10 @@ public class EquationScreen extends Scene {
         });
     }
 
-    public List<Object> RandomiseEqn() {
+    public List<Object> RandomiseEqn(String value) {
         String equation = "";
         char required;
-        int randomiser;
+        int randomizer;
         // TEMPORARY FOR RANDOMISING TESTING
         ArrayList<Character> operators = new ArrayList<Character>();
         operators.add('+');
@@ -114,35 +114,51 @@ public class EquationScreen extends Scene {
         operators.add('*');
         operators.add('/');
 
-        randomiser = rand.nextInt(14);
+        System.out.println(value.toCharArray());
 
-        if (randomiser < 10) {
-            required = (char) randomiser;
-        } else {
-            required = operators.get(randomiser - 10);
+        for (char c : value.toCharArray()) {
+            if (operators.contains(c)) {
+                required = c;
+                return MakeEqn(required,-1);
+            }
         }
 
-        if (rand.nextInt(2) == 1) {
-            return MakeEqn('+');
-        }
-        return MakeEqn('-');
+        int number = Integer.parseInt(value);
+
+        randomizer = rand.nextInt(14);
+
+        randomizer = rand.nextInt(4);
+        required = operators.get(randomizer);
+
+        return MakeEqn(required,number);
     }
 
-    public List<Object> MakeEqn(char required) {
+    public List<Object> MakeEqn(char required,int number) {
         String eqn = "";
         int ans = 0;
+        int num1, num2;
 
-        if (required == '-' || required == '+') {
-            int num1 = rand.nextInt(99);
-            int num2 = rand.nextInt(99);
+        if (number == -1) { // No specific number provided
+            num1 = rand.nextInt(99);
+            num2 = rand.nextInt(99);
+        } else { // Use the provided number
+            num1 = number;
+            num2 = rand.nextInt(99);
+        }
 
-            if (required == '+') {
-                eqn = num1 + "" + required + "" + num2;
-                ans = num1 + num2;
-            } else if (required == '-') {
-                eqn = Math.max(num1, num2) + "" + required + "" + Math.min(num1, num2);
-                ans = Math.max(num1, num2) - Math.min(num1, num2);
-            }
+        if (required == '+') {
+            eqn = num1 + "" + required + num2;
+            ans = num1 + num2;
+        } else if (required == '-') {
+            eqn = Math.max(num1, num2) + "" + required + Math.min(num1, num2);
+            ans = Math.max(num1, num2) - Math.min(num1, num2);
+        } else if (required == '*') {
+            eqn = num1 + "×" + num2;
+            ans = num1 * num2;
+        } else if (required == '/') {
+            num2 = num1 * (rand.nextInt(19) + 2);
+            eqn = num2 + "÷" + num1;
+            ans = num2 / num1;
         }
 
         eqn += "=?";

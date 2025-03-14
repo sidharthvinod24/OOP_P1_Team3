@@ -148,10 +148,7 @@ public class GridScreen extends Scene {
 
 	public void logic(float deltaTime) {
 
-		if (Gdx.input.isKeyPressed(Keys.Q)) {
-            game.SetEquationScreen();
-            //dispose();
-        }
+
 	    float worldWidth = viewport.getWorldWidth();
 	    float worldHeight = viewport.getWorldHeight();
 
