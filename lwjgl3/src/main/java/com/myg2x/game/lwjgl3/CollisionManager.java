@@ -45,7 +45,9 @@ public class CollisionManager {
                     // We need to make sure that the player is not null before we call the getRect method.
                     assert player != null;
                     if (entity.getRect().overlaps(player.getRect())) {
+                        MathOperatorObject mathEntity = (MathOperatorObject) entity;
                         System.out.println("Player consumed entity!");
+                        System.out.println("Value: " + mathEntity.getValue());
 
                         // we need to make sure that the audioManager is not null before we call the playSoundEffect method.
                         assert audioManager != null;
