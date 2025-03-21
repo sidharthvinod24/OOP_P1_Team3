@@ -19,6 +19,7 @@ public class PauseScreen extends Scene{
     
     private ButtonObject exitButton;
     private ButtonObject returnToMenuButton;
+    private ButtonObject settingsButton;
 	
 	
 	public PauseScreen(final AbstractEngine game){
@@ -28,13 +29,15 @@ public class PauseScreen extends Scene{
 		
 		stage = new Stage(game.viewport);
 		
-		
 		background = new Texture(Gdx.files.internal("whiteboard_img2.png"));
 		
 		exitButton = new ButtonObject(new Texture(Gdx.files.internal("cross.png")), mySkin, 
 				30, 30, 650, 395 , 0.20f);
+		
 		returnToMenuButton = new ButtonObject("Return to Menu", new Texture(Gdx.files.internal("post-it.png")), mySkin, 
-				250, 70, 400, 200 , 0.20f);
+				250, 70, 250, 150 , 0.15f);
+		settingsButton = new ButtonObject("Settings", new Texture(Gdx.files.internal("post-it.png")), mySkin, 
+				250, 70, 250, 250 , 0.15f);
 		
 		
 		InputListener exitPause = new InputListener() {
@@ -53,12 +56,25 @@ public class PauseScreen extends Scene{
             }
 		};
 		
+		InputListener openSettings = new InputListener() {
+			@Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+         	   game.SetKeyBindingScreen();
+               return true;
+            }
+		};
+		
+		
 		exitButton.setListener(exitPause);
 		returnToMenuButton.setListener(exitToMenu);
+		settingsButton.setListener(openSettings);
 		
 		stage.addActor(exitButton.getButton());
 		stage.addActor(returnToMenuButton.getButton());
+		stage.addActor(settingsButton.getButton());	
+		
 	}
+	
 	
 	
 	@Override
@@ -71,6 +87,8 @@ public class PauseScreen extends Scene{
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		logic(delta);
+		game.viewport.apply();
+		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		
 		game.batch.begin();
 			game.batch.draw(background, 100, 50, 600, 400);
@@ -82,11 +100,6 @@ public class PauseScreen extends Scene{
 	}
 	
 	public void logic(float delta) {
-		if (Gdx.input.isKeyJustPressed(Keys.P)) {
-            game.SetGridScreen();
-            //dispose();
-        }
-		
 		Gdx.input.setInputProcessor(stage);
 	}
 

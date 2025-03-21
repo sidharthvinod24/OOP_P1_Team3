@@ -26,7 +26,7 @@ public class MathOperatorObject extends TextureObject{
     }
     @Override
     public void draw(SpriteBatch batch) {
-        batch.draw(number, getPosX(), getPosY(), 0.5f, 0.5f);
+        batch.draw(number, getPosX(), getPosY(), 50f, 50f);
     }
 
 

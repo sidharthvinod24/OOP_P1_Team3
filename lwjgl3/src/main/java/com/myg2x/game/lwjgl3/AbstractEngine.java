@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.Input;
 
 public class AbstractEngine extends Game{
@@ -40,32 +41,32 @@ public class AbstractEngine extends Game{
 		font.setUseIntegerPositions(false);
 
 		//Initialize scenes
-		keyBindingManager = new KeyBindingManager();
+		keyBindingManager = KeyBindingManager.getInstance();
 		keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
 		menuScene = new MainMenuScreen(this);
 		gridScreen = new GridScreen(this);
         equationScreen = new EquationScreen(this, "1");
 		pauseScreen = new PauseScreen(this);
+		
 		SetMenuScreen();
 	}
 
 	public void render() {
 		super.render(); // important!
-
-		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-
-            if (getScreen() == keyBindingScreen) {
-                // If already in key binding menu, exit it without forcing a bind
-                SetMenuScreen();
-                isRebinding = false;
-
-            } else if(getScreen() == gridScreen){
-                // Open key binding menu
-                SetKeyBindingScreen();
-                isRebinding = true;
-            }
-
-        }
+//		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+//
+//            if (getScreen() == keyBindingScreen) {
+//                // If already in key binding menu, exit it without forcing a bind
+//                SetMenuScreen();
+//                isRebinding = false;
+//
+//            } else if(getScreen() == gridScreen){
+//                // Open key binding menu
+//                SetKeyBindingScreen();
+//                isRebinding = true;
+//            }
+//
+//        }
 	}
 
 
@@ -77,10 +78,10 @@ public class AbstractEngine extends Game{
 	{
 		this.setScreen(gridScreen);
 	}
-//	public void SetEquationScreen()
-//	{
-//		this.setScreen(equationScreen);
-//	}
+	public void SetEquationScreen()
+	{
+		this.setScreen(equationScreen);
+	}
 	public void SetEquationScreenWithValue(String value){
         this.setScreen( new EquationScreen(this, value));
     }

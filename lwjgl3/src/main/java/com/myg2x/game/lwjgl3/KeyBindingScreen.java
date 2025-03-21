@@ -3,8 +3,13 @@ package com.myg2x.game.lwjgl3;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class KeyBindingScreen extends Scene {
 	private final AbstractEngine game;
@@ -12,15 +17,43 @@ public class KeyBindingScreen extends Scene {
 	private String rebindKeyAction = null;
 	private boolean awaitingNewKey = false; // Tracks if waiting for a new key
 	
-	private SpriteBatch batch;
+	private Stage stage;
+    private Skin mySkin;
+
+    private ButtonObject exitButton;
+    
     private BitmapFont font;
+    
+    private Texture background;
     
 	public KeyBindingScreen(final AbstractEngine game, KeyBindingManager keyBindingManager) {
 		this.game = game;
-		this.keyBindingManager = keyBindingManager;
+		//this.keyBindingManager = keyBindingManager;
+		this.background = new Texture(Gdx.files.internal("whiteboard_img2.png"));
 		
-		batch = new SpriteBatch();
-        font = new BitmapFont();
+		mySkin = new Skin(Gdx.files.internal("skin/level-plane-ui.json"));
+		
+		stage = new Stage(game.viewport);
+		
+        font = new BitmapFont(Gdx.files.internal("black.fnt"),
+                Gdx.files.internal("black_0.png"), false);
+        font.getData().setScale(0.5f);
+        
+        exitButton = new ButtonObject("Confirm bindings", new Texture(Gdx.files.internal("post-it.png")), mySkin, 
+				175, 35, 250, 100 , 0.15f);
+        
+        InputListener exitSettings = new InputListener() {
+			@Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+         	   	System.out.println("Rebinded LEFT to " + keyBindingManager.getKeyBinding("LEFT"));				
+         	   	game.SetPauseScreen();
+				return true;
+            }
+		};
+        
+		exitButton.setListener(exitSettings);
+		
+        stage.addActor(exitButton.getButton());
 	}
 	
 	@Override
@@ -31,64 +64,71 @@ public class KeyBindingScreen extends Scene {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
+        game.batch.begin();
 
-        // Display instructions
-        font.draw(batch, "KEY REBINDING MENU", 100, 400);
-        font.draw(batch, "Press the key you want to bind for a specific action.", 100, 350);
-        font.draw(batch, "Press ESC to return to the main menu without binding.", 100, 300);
-
-     // Display current movement key bindings
-        font.draw(batch, "Move Left: " + Input.Keys.toString(keyBindingManager.getKeyBinding("LEFT")), 100, 250);
-        font.draw(batch, "Move Right: " + Input.Keys.toString(keyBindingManager.getKeyBinding("RIGHT")), 100, 225);
-        font.draw(batch, "Move Up: " + Input.Keys.toString(keyBindingManager.getKeyBinding("UP")), 100, 200);
-        font.draw(batch, "Move Down: " + Input.Keys.toString(keyBindingManager.getKeyBinding("DOWN")), 100, 175);
-
-        // Show rebinding status
-        if (rebindKeyAction != null) {
-            if (awaitingNewKey) {
-                font.draw(batch, "Press a new key for " + rebindKeyAction, 100, 150);
-            } else {
-                font.draw(batch, "Press a key to change " + rebindKeyAction, 100, 150);
-            }
-        }
-        batch.end();
+	        game.batch.draw(background, 100, 50, 600, 400);
+	
+	        // Display instructions
+	        font.draw(game.batch, "KEY REBINDING MENU", 120, 400);
+	        font.draw(game.batch, "Press the key you want to bind for a specific action.", 120, 350);
+	        font.draw(game.batch, "Press ESC to return to the main menu without binding.", 120, 300);
+	
+	        //Display current movement key bindings
+	        font.draw(game.batch, "Move Left: " + Input.Keys.toString(KeyBindingManager.getInstance().getKeyBinding("LEFT")), 120, 250);
+	        font.draw(game.batch, "Move Right: " + Input.Keys.toString(KeyBindingManager.getInstance().getKeyBinding("RIGHT")), 120, 225);
+	        font.draw(game.batch, "Move Up: " + Input.Keys.toString(KeyBindingManager.getInstance().getKeyBinding("UP")), 120, 200);
+	        font.draw(game.batch, "Move Down: " + Input.Keys.toString(KeyBindingManager.getInstance().getKeyBinding("DOWN")), 120, 175);
+	        
+	        // Show rebinding status
+	        if (rebindKeyAction != null) {
+	            if (awaitingNewKey) {
+	            	font.draw(game.batch, "Press a new key for " + rebindKeyAction, 120, 150);
+	            } else {
+	            	font.draw(game.batch , "Press a key to change " + rebindKeyAction, 120, 150);
+	            }
+	        }
+        
+        game.batch.end();
+        
+        stage.act();
+		stage.draw();
         
 		// Esc pressed then exit to menu without binding a key
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-        	System.out.println("Returning to Main Menu...");
-            return;
-        }
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+//        	System.out.println("Returning to Main Menu...");
+//            game.SetGridScreen();
+//        }
         
+        Gdx.input.setInputProcessor(stage);
         updateKeyBinding();
 	}
-
 	
 	
     public void setRebindAction(String action) {
         rebindKeyAction = action;
         System.out.println("Press a key to bind for " + action);
     }
-
+    
     public void updateKeyBinding() {
     	// waiting for a new key to be assigned
         if (awaitingNewKey && rebindKeyAction != null) {
             for (int key = 0; key < 256; key++) {
                 if (Gdx.input.isKeyJustPressed(key)) {
-                    keyBindingManager.rebindKey(rebindKeyAction, key);
+                    KeyBindingManager.getInstance().rebindKey(rebindKeyAction, key);
                     System.out.println(rebindKeyAction + " is now bound to: " + Input.Keys.toString(key));
                     rebindKeyAction = null;
                     awaitingNewKey = false; // Reset state
                     return;
                 }
             }
-        } 
-     // selecting a key to rebind
+        }
+        
+        //selecting a key to rebind
         else if (rebindKeyAction == null) {
             for (String action : new String[]{"LEFT", "RIGHT", "UP", "DOWN"}) {
-                int currentKey = keyBindingManager.getKeyBinding(action);
+                int currentKey = KeyBindingManager.getInstance().getKeyBinding(action);
                 if (Gdx.input.isKeyJustPressed(currentKey)) {
                     rebindKeyAction = action;
                     awaitingNewKey = true;
@@ -101,7 +141,7 @@ public class KeyBindingScreen extends Scene {
 
     @Override
 	public void resize(int width, int height) {
-    	
+    	game.viewport.update(width, height, true);
     }
 
 	@Override

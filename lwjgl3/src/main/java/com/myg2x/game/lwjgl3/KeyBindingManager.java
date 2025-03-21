@@ -8,13 +8,22 @@ import java.util.HashMap;
 
 public class KeyBindingManager {
 	// Key bindings hash map
+	private static KeyBindingManager instance;
+	
     private Map<String, Integer> keyBindings;
     
-    public KeyBindingManager() {
+    private KeyBindingManager() {
         keyBindings = new HashMap<>();
         loadDefaultKeyBindings();
     }
     
+    public static KeyBindingManager getInstance() {
+        if (instance == null) {
+            instance = new KeyBindingManager();
+        }
+        return instance;
+    }
+
     private void loadDefaultKeyBindings() {	
         keyBindings.put("LEFT", Keys.LEFT);
         keyBindings.put("RIGHT", Keys.RIGHT);
@@ -24,11 +33,9 @@ public class KeyBindingManager {
     
     public void rebindKey(String action, int newKey) {
         keyBindings.put(action, newKey);
-
     }
 
     public int getKeyBinding(String action) {
-
         return keyBindings.getOrDefault(action, Keys.UNKNOWN);
     }
 }

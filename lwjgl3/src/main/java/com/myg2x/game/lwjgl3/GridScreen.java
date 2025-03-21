@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,7 +34,6 @@ public class GridScreen extends Scene {
 	private Player player;
     private TextureAtlas mathAtlas;
 	private Grid grid;
-	private KeyBindingManager keyBindingManager;
 	
 	public GridScreen(final AbstractEngine game) {
 		this.game = game;
@@ -42,7 +42,6 @@ public class GridScreen extends Scene {
 
 		audioManager = new AudioManager();
 
-		keyBindingManager = new KeyBindingManager();
 		//Add required audio files
 		try {
 			audioManager.addAudio("backgroundMusic", "backgroundMusic.mp3", true);
@@ -59,9 +58,9 @@ public class GridScreen extends Scene {
 		rand = new Random();
 
 		//Rendering initialization
-		batch = game.batch;
-		shape = game.shape;
-		viewport = game.viewport;
+//		batch = game.batch;
+//		shape = game.shape;
+//		viewport = game.viewport;
 
 		try {
 			circleImage = new Texture(Gdx.files.internal("Circle.png"));
@@ -70,7 +69,7 @@ public class GridScreen extends Scene {
 		}
 
 
-		player = new Player(keyBindingManager, grid.getOffset(), grid.getOffset(), 4.f, circleImage);
+		player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
 
 		entityManager.addEntity(player);
 		collisionManager.addEntity(player);
@@ -117,32 +116,32 @@ public class GridScreen extends Scene {
     }
 
 	public void resize(int width, int height) {
-		viewport.update(width, height, true);
+		game.viewport.update(width, height, true);
 	}
 
 	@Override
 	public void render(float delta) {
 	    draw();
 	    input(delta);
-
 	    logic(delta);
 	}
 	private void draw() {
 		try {
 			ScreenUtils.clear(0, 0, 0.2f, 1); // Clear screen with dark blue
-			viewport.apply();
-			batch.setProjectionMatrix(viewport.getCamera().combined);
+			game.viewport.apply();
+			game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 			
-			batch.begin();
-				entityManager.render(batch); // ✅ Draw all entities
-			batch.end();
+			game.batch.begin();
+				entityManager.render(game.batch); // ✅ Draw all entities
+			game.batch.end();
 			
-			shape.setProjectionMatrix(viewport.getCamera().combined);
+			game.shape.setProjectionMatrix(game.viewport.getCamera().combined);
 			
-			shape.begin(ShapeRenderer.ShapeType.Line);
-				shape.setColor(Color.WHITE);
-				grid.draw(shape); // ✅ Draw the grid
-			shape.end();
+			game.shape.begin(ShapeRenderer.ShapeType.Line);
+				game.shape.setColor(Color.WHITE);
+				grid.draw(game.shape); // ✅ Draw the grid
+			game.shape.end();
+			
 		} catch (Exception e) {
 			System.err.println("Error in draw: " + e.getMessage());
 		}
@@ -155,12 +154,14 @@ public class GridScreen extends Scene {
             game.SetEquationScreen();
             //dispose();
         }
-		else if (Gdx.input.isKeyPressed(Keys.O))
+		else if (Gdx.input.isKeyPressed(Keys.ESCAPE))
 		{
 			game.SetPauseScreen();
 		}
-	    float worldWidth = viewport.getWorldWidth();
-	    float worldHeight = viewport.getWorldHeight();
+		
+		
+	    float worldWidth = game.viewport.getWorldWidth();
+	    float worldHeight = game.viewport.getWorldHeight();
 
 	    // Clamp player within the viewport
 	    player.setPosX(MathUtils.clamp(player.getPosX(), 0, worldWidth - 0.5f));

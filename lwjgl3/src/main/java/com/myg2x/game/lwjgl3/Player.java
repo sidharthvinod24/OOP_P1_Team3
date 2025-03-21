@@ -15,12 +15,10 @@ public class Player extends Entity implements IMovable {
 
     // Return value indicates if movement was blocked by collision
     public boolean wasBlocked = false;
-    
-    private KeyBindingManager keyBindingManager;
    
-    public Player(KeyBindingManager keyBindingManager ,float x, float y, float s, Texture t) {
+    
+    public Player(float x, float y, float s, Texture t) {
         super(x, y, s, t);
-        this.keyBindingManager = keyBindingManager;
     }
     
     @Override
@@ -72,7 +70,7 @@ public class Player extends Entity implements IMovable {
     public void move(float delta, float tileSize, float offset, int gridWidth, int gridHeight, ArrayList<Entity> colliders) {
         wasBlocked = false;
 
-        if (Gdx.input.isKeyPressed(keyBindingManager.getKeyBinding("LEFT"))) {
+        if (Gdx.input.isKeyPressed(KeyBindingManager.getInstance().getKeyBinding("LEFT"))) {
             handleMovement(-tileSize, 0, tileSize, offset, gridWidth, gridHeight, colliders, presstimeL,
                     () -> {if(presstimeL > 0.5f) {
                     	presstimeL -= 0.1f;
@@ -83,7 +81,8 @@ public class Player extends Entity implements IMovable {
             presstimeL = 0;
         }
 
-        if (Gdx.input.isKeyPressed(keyBindingManager.getKeyBinding("RIGHT"))) {
+        if (Gdx.input.isKeyPressed(KeyBindingManager.getInstance().getKeyBinding("RIGHT"))) {
+        	//System.out.println("Right binding: " + keyBindingManager.getKeyBinding("RIGHT"));
             handleMovement(tileSize, 0, tileSize, offset, gridWidth, gridHeight, colliders, presstimeR,
                     () -> {if(presstimeR > 0.5f) {
                     	presstimeR -= 0.1f;
@@ -94,7 +93,8 @@ public class Player extends Entity implements IMovable {
             presstimeR = 0;
         }
 
-        if (Gdx.input.isKeyPressed(keyBindingManager.getKeyBinding("UP"))) {
+        if (Gdx.input.isKeyPressed(KeyBindingManager.getInstance().getKeyBinding("UP"))) {
+        	//System.out.println("Up binding: " + keyBindingManager.getKeyBinding("UP"));
             handleMovement(0, tileSize, tileSize, offset, gridWidth, gridHeight, colliders, presstimeU,
                     () -> {if(presstimeU > 0.5f) {
                     	presstimeU -= 0.1f;
@@ -104,7 +104,8 @@ public class Player extends Entity implements IMovable {
             presstimeU = 0;
         }
 
-        if (Gdx.input.isKeyPressed(keyBindingManager.getKeyBinding("DOWN"))) {
+        if (Gdx.input.isKeyPressed(KeyBindingManager.getInstance().getKeyBinding("DOWN"))) {
+        	//System.out.println("Down binding: " + keyBindingManager.getKeyBinding("DOWN"));
             handleMovement(0, -tileSize, tileSize, offset, gridWidth, gridHeight, colliders, presstimeD,
             		() -> {if(presstimeD > 0.5f) {
             			presstimeD -= 0.1f;
