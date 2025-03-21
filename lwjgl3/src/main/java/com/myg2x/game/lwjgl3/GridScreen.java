@@ -1,10 +1,14 @@
 package com.myg2x.game.lwjgl3;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,11 +30,8 @@ public class GridScreen extends Scene {
 	private AudioManager audioManager;
 
 	private Texture circleImage;
-	private Texture squareImage;
-
 	private Player player;
-	private TextureObject enemy;
-
+    private TextureAtlas mathAtlas;
 	private Grid grid;
 	private KeyBindingManager keyBindingManager;
 	
@@ -40,7 +41,7 @@ public class GridScreen extends Scene {
 		collisionManager = new CollisionManager();
 
 		audioManager = new AudioManager();
-		
+
 		keyBindingManager = new KeyBindingManager();
 		//Add required audio files
 		try {
@@ -61,11 +62,7 @@ public class GridScreen extends Scene {
 		batch = game.batch;
 		shape = game.shape;
 		viewport = game.viewport;
-		try {
-			squareImage = new Texture(Gdx.files.internal("Square.png"));
-		} catch (Exception e) {
-			System.err.println("Error loading Square.png: " + e.getMessage());
-		}
+
 		try {
 			circleImage = new Texture(Gdx.files.internal("Circle.png"));
 		} catch (Exception e) {
@@ -78,16 +75,46 @@ public class GridScreen extends Scene {
 		entityManager.addEntity(player);
 		collisionManager.addEntity(player);
 
-		// Create 5 enemies/obstacles
-		for (int i = 0; i < 5; i++) {
-			enemy = new TextureObject(
-					grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset(),
-					grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset(),
-					rand.nextFloat() * 2.f, squareImage);
-			entityManager.addEntity(enemy);
-			collisionManager.addEntity(enemy);
-		}
+        loadMathSprites();
 	}
+
+
+    private void loadMathSprites(){
+        FileHandle atlasFile = Gdx.files.internal("sprite.atlas");
+
+        try{
+            mathAtlas = new TextureAtlas(atlasFile);
+
+            // Set the number from 1 to 9
+            TextureRegion[] numberRegions = new TextureRegion[13];
+
+            for (int i = 0; i < 9; i++) {
+                numberRegions[i] = mathAtlas.findRegion(String.valueOf(i + 1));
+            }
+
+            String [] operators = {"plus", "minus", "multiplication", "divide"};
+            for (int i = 9; i < 13; i++) {
+                numberRegions[i] = mathAtlas.findRegion(operators[i-9]);
+            }
+
+
+            System.out.println(Arrays.toString(numberRegions));
+            // Add 5 math entities
+            for (int i = 0; i < 9; i++) {
+                MathOperatorObject mathEntity = new MathOperatorObject(
+                    grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset(),
+                    grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset(),
+                    rand.nextFloat() * 2.f,
+                    numberRegions
+                );
+                entityManager.addEntity(mathEntity);
+                collisionManager.addEntity(mathEntity);
+            }
+
+        } catch (Exception e){
+            System.err.println("Error loading sprite.atlas: " + e.getMessage());
+        }
+    }
 
 	public void resize(int width, int height) {
 		viewport.update(width, height, true);
@@ -181,11 +208,6 @@ public class GridScreen extends Scene {
 			System.err.println("Error disposing shape: " + e.getMessage());
 		}
 		try {
-			squareImage.dispose();
-		} catch (Exception e) {
-			System.err.println("Error disposing squareImage: " + e.getMessage());
-		}
-		try {
 			circleImage.dispose();
 		} catch (Exception e) {
 			System.err.println("Error disposing circleImage: " + e.getMessage());
@@ -195,5 +217,11 @@ public class GridScreen extends Scene {
 		} catch (Exception e) {
 			System.err.println("Error disposing audioManager: " + e.getMessage());
 		}
+
+        try {
+            mathAtlas.dispose();
+        } catch (Exception e) {
+            System.err.println("Error disposing mathAtlas: " + e.getMessage());
+        }
 	}
 }

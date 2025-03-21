@@ -9,55 +9,50 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class EquationScreen extends Scene {
 
-	private final AbstractEngine game;
-	private SpriteBatch batch;
+    private final AbstractEngine game;
+    private SpriteBatch batch;
     private BitmapFont font;
     private Random rand;
-    
+
     private Texture overlay;
     private Grid grid;
     private GlyphLayout glyphLayout = new GlyphLayout();
-    
+
     private String answer = "";
     private String reply = "";
     private String question = "";
+    private String value;
     private List<Object> equation;
-    
-    public EquationScreen(final AbstractEngine game) {
-    	grid = new Grid();
+
+    public EquationScreen(final AbstractEngine game, String value) {
+        this.value = value;
+        grid = new Grid();
         this.game = game;
         batch = new SpriteBatch();
-        
+
         rand = new Random();
-        
-        font = new BitmapFont(Gdx.files.internal("chalk.fnt"),
-                Gdx.files.internal("chalk.png"), false);
-        
+
+        font = new BitmapFont(Gdx.files.internal("Atalon.fnt"),
+            Gdx.files.internal("Atalon.png"), false);
+
         font.getData().setScale(1.5f);
         overlay = new Texture(Gdx.files.internal("testborder.png"));
-        
-        equation = RandomiseEqn();
+
+        equation = RandomiseEqn(value);
         question = (String) equation.get(0);
         answer = Integer.toString((int) equation.get(1));
-        
-        
     }
-    
 
-	@Override
-	public void render(float delta) {
-		logic(delta);
-
-
+    @Override
+    public void render(float delta) {
+        logic(delta,value);
 
         batch.begin();
         //draw text. Remember that x and y are in meters
@@ -66,149 +61,154 @@ public class EquationScreen extends Scene {
 	        font.draw(batch, "ANS: ", 225, 237.5f);
 	        font.draw(batch, reply, 350, 237.5f);
         batch.end();
-		
-	}
-	
-	public void logic(float delta) {
-		//RandomiseEqn();
-		if(Gdx.input.isKeyPressed(Keys.A)) {
-			game.SetGridScreen();
-		}
-		
-		
-		// Processing answer
-		Gdx.input.setInputProcessor(new InputAdapter() {
+    }
+
+    public void logic(float delta, String value) {
+        // RandomiseEqn();
+        if (Gdx.input.isKeyPressed(Keys.A)) {
+            game.SetGridScreen();
+        }
+
+        // Processing answer
+        Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                // Check if the key is a number (0-9) or backspace
-                if (keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9 && reply.length() < 4) {
-//                    System.out.println("Pressed: " + Input.Keys.toString(keycode));
-                    reply += Input.Keys.toString(keycode);
-                    return true; // Input handled
-                }
-                else if (keycode == Input.Keys.BACKSPACE) {
-//                	System.out.println("Pressed: " + Input.Keys.toString(keycode));
-                	if (reply.length() > 0) {
-                		reply = reply.substring(0, reply.length() - 1);
-                	}
-                }
-                
-                else if (keycode == Input.Keys.ENTER) {
-                	if(reply.length() > 0) {
-            			if(Integer.parseInt(reply) == Integer.parseInt(answer)) {
-            				System.out.println("CORRECT!!!");
-            			}
-            			else {
-            				System.out.println("WRONG!!!");
+                // Acts as a placeholder if number is not pressed
+                int number = -1;
 
-            			}
-            			game.SetGridScreen();
-        				
-        				equation = RandomiseEqn();
-        		        question = (String) equation.get(0);
-        		        answer = Integer.toString((int) equation.get(1));
-        		        reply = "";
-            			
-            			
-            		}
+                if (keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9) {
+                    number = keycode - Input.Keys.NUM_0;  // Convert NUM_0-9 to 0-9
+                } else if (keycode >= Input.Keys.NUMPAD_0 && keycode <= Input.Keys.NUMPAD_9) {
+                    number = keycode - Input.Keys.NUMPAD_0; // Convert NUMPAD_0-9 to 0-9
+                }
+
+                // Ensures that the correct number is added to the reply
+                if (number != -1 && reply.length() < 4) {
+                    reply += number; // Append only the number
+                    System.out.println("Pressed: " + number);
+                    return true; // Input handled
+                    }
+                else if (keycode == Input.Keys.BACKSPACE) {
+                        // System.out.println("Pressed: " + Input.Keys.toString(keycode));
+                        if (!reply.isEmpty()) {
+                            reply = reply.substring(0, reply.length() - 1);
+                        }
+                } else if (keycode == Input.Keys.ENTER) {
+                    if (!reply.isEmpty()) {
+                        if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
+                            System.out.println("CORRECT!!!");
+                        } else {
+                            System.out.println("WRONG!!!");
+                        }
+                        game.SetGridScreen();
+
+                        equation = RandomiseEqn(value);
+                        question = (String) equation.get(0);
+                        answer = Integer.toString((int) equation.get(1));
+                        reply = "";
+                    }
                 }
                 return false; // Pass input to other handlers
             }
         });
-		
-		
-	}
-	
-	public List<Object> RandomiseEqn() {
-		String equation = "";
-		char required;
-		int randomiser;
-		//TEMPORARY FOR RANDOMISING TESTING
-		ArrayList<Character> operators = new ArrayList<Character>();
-		operators.add('+');
-		operators.add('-');
-		operators.add('*');
-		operators.add('/');
-		
-		randomiser = rand.nextInt(14);
-		
-		if (randomiser < 10) {
-			required = (char) randomiser;
+    }
 
-		}
-		else {
-			required = operators.get(randomiser-10);
-		}
-		
-		if(rand.nextInt(2) == 1) {
-			return MakeEqn('+');
-		}
-		return MakeEqn('-');
-	}
-	
-	public List<Object> MakeEqn(char required) {
-		String eqn = "";
-		int ans = 0;
-		
-		if(required == '-' || required == '+') {
-			int num1 = rand.nextInt(0, 99);
-			int num2 = rand.nextInt(0, 99);
-			
-			if(required == '+') {
-				eqn = num1 + "" + required + "" + num2; 
-				ans = num1 + num2;
-				
-			}
-			
-			else if(required == '-') {
-				eqn = Math.max(num1, num2) + "" + required + "" + Math.min(num1, num2);
-				ans = Math.max(num1, num2) - Math.min(num1, num2);
-			}
-			
-		}
-		
-		
-		
-		
-		eqn += "=?";
-		System.out.println(eqn);
-		System.out.println(ans);
-		return Arrays.asList(eqn, ans);
-	}
+    public List<Object> RandomiseEqn(String value) {
+        String equation = "";
+        char required;
+        int randomizer;
+        // TEMPORARY FOR RANDOMISING TESTING
+        ArrayList<Character> operators = new ArrayList<Character>();
+        operators.add('+');
+        operators.add('-');
+        operators.add('*');
+        operators.add('/');
 
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		this.game.font.getData().setScale(0.1f);
-	}
-	
-	@Override
-	public void resize(int width, int height) {
-		game.viewport.update(width, height, true);
-	}
+        System.out.println(value.toCharArray());
 
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+        for (char c : value.toCharArray()) {
+            if (operators.contains(c)) {
+                required = c;
+                return MakeEqn(required,-1);
+            }
+        }
 
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+        int number = Integer.parseInt(value);
 
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		this.game.font.getData().setScale(0.01f);
-	}
+        randomizer = rand.nextInt(14);
 
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
+        randomizer = rand.nextInt(4);
+        required = operators.get(randomizer);
 
+        return MakeEqn(required,number);
+    }
+
+    public List<Object> MakeEqn(char required,int number) {
+        String eqn = "";
+        int ans = 0;
+        int num1, num2;
+
+        if (number == -1) { // No specific number provided
+            num1 = rand.nextInt(99);
+            num2 = rand.nextInt(99);
+        } else { // Use the provided number
+            num1 = number;
+            num2 = rand.nextInt(99);
+        }
+
+        if (required == '+') {
+            eqn = num1 + "" + required + num2;
+            ans = num1 + num2;
+        } else if (required == '-') {
+            eqn = Math.max(num1, num2) + "" + required + Math.min(num1, num2);
+            ans = Math.max(num1, num2) - Math.min(num1, num2);
+        } else if (required == '*') {
+            eqn = num1 + "×" + num2;
+            ans = num1 * num2;
+        } else if (required == '/') {
+            num2 = num1 * (rand.nextInt(19) + 2);
+            eqn = num2 + "÷" + num1;
+            ans = num2 / num1;
+        }
+
+        eqn += "=?";
+        System.out.println(eqn);
+        System.out.println(ans);
+        return Arrays.asList(eqn, ans);
+    }
+
+    @Override
+    public void show() {
+        // TODO Auto-generated method stub
+        this.game.font.getData().setScale(0.1f);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        game.viewport.update(width, height, true);
+    }
+
+    @Override
+    public void pause() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void resume() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void hide() {
+        // TODO Auto-generated method stub
+        this.game.font.getData().setScale(0.01f);
+    }
+
+    @Override
+    public void dispose() {
+        // TODO Auto-generated method stub
+
+    }
 }
