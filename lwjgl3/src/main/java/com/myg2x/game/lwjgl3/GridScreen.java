@@ -104,8 +104,8 @@ public class GridScreen extends Scene{
             // Add 5 math entities
             for (int i = 0; i < 9; i++) {
                 MathOperatorObject mathEntity = new MathOperatorObject(
-                    grid.getTileSize() * rand.nextInt(grid.getWidth() - 1) + grid.getOffset(),
-                    grid.getTileSize() * rand.nextInt(grid.getHeight() - 1) + grid.getOffset(),
+                    grid.getTileSize() * rand.nextInt(grid.getWidth()) + grid.getOffset(),
+                    grid.getTileSize() * rand.nextInt(grid.getHeight()) + grid.getOffset(),
                     rand.nextFloat() * 2.f,
                     numberRegions
                 );
@@ -131,7 +131,7 @@ public class GridScreen extends Scene{
 
 
 	}
-	private void draw() {
+	public void draw() {
 		try {
 			ScreenUtils.clear(0, 0, 0.2f, 1); // Clear screen with dark blue
 			viewport.apply();

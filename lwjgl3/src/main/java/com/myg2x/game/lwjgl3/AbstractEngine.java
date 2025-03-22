@@ -91,12 +91,17 @@ public class AbstractEngine extends Game implements TimerObserver {
         this.setScreen(gridScreen);
         countdownTimer.start();
     }
+    
+    public void DrawGridScreen() {
+    	gridScreen.draw();
+    }
 
     public void SetEquationScreenWithValue(String value) {
-        if (equationScreen != null) {
-            equationScreen.dispose();
-        }
-        equationScreen = new EquationScreen(this, value);
+//        if (equationScreen != null) {
+//            equationScreen.dispose();
+//        }
+//        equationScreen = new EquationScreen(this, value);
+    	equationScreen.setValue(value);
         this.setScreen(equationScreen);
     }
 

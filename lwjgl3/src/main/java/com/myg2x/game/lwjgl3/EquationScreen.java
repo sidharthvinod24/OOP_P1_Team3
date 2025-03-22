@@ -51,11 +51,20 @@ public class EquationScreen extends Scene {
         question = (String) equation.get(0);
         answer = Integer.toString((int) equation.get(1));
     }
+    
+    public void setValue(String value) {
+    	this.value = value;
+    	equation = RandomiseEqn(value);
+        question = (String) equation.get(0);
+        answer = Integer.toString((int) equation.get(1));
+    }
 
     @Override
     public void render(float delta) {
+    	game.DrawGridScreen();
         logic(delta,value);
 
+        game.viewport.apply();
         batch.begin();
         // draw text. Remember that x and y are in meters
         batch.draw(overlay, 175, 125, 450, 250);
@@ -103,9 +112,9 @@ public class EquationScreen extends Scene {
                         }
                         game.SetGridScreen();
 
-                        equation = RandomiseEqn(value);
-                        question = (String) equation.get(0);
-                        answer = Integer.toString((int) equation.get(1));
+//                        equation = RandomiseEqn(value);
+//                        question = (String) equation.get(0);
+//                        answer = Integer.toString((int) equation.get(1));
                         reply = "";
                     }
                 }
