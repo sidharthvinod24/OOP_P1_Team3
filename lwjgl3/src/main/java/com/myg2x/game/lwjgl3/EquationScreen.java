@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.TimeUtils;
 
 public class EquationScreen extends Scene {
 
@@ -30,6 +31,7 @@ public class EquationScreen extends Scene {
     private String question = "";
     private String value;
     private List<Object> equation;
+    public long diffinMillis;
 
     public EquationScreen(final AbstractEngine game, String value) {
         this.value = value;
@@ -76,24 +78,23 @@ public class EquationScreen extends Scene {
                 // Acts as a placeholder if number is not pressed
                 int number = -1;
 
-                if (keycode >= Input.Keys.NUM_0 && keycode <= Input.Keys.NUM_9) {
-                    number = keycode - Input.Keys.NUM_0;  // Convert NUM_0-9 to 0-9
-                } else if (keycode >= Input.Keys.NUMPAD_0 && keycode <= Input.Keys.NUMPAD_9) {
-                    number = keycode - Input.Keys.NUMPAD_0; // Convert NUMPAD_0-9 to 0-9
+
+                if (keycode >= Keys.NUM_0 && keycode <= Keys.NUM_9){
+                    number = keycode - Keys.NUM_0;
+                }
+                else if (keycode >= Keys.NUMPAD_0 && keycode <= Keys.NUMPAD_9){
+                    number = keycode - Keys.NUMPAD_0;
                 }
 
-                // Ensures that the correct number is added to the reply
-                if (number != -1 && reply.length() < 4) {
-                    reply += number; // Append only the number
-                    System.out.println("Pressed: " + number);
-                    return true; // Input handled
-                    }
-                else if (keycode == Input.Keys.BACKSPACE) {
+                if (number != -1 && reply.length() < 4){
+                    reply += number;
+                }
+                else if (keycode == Keys.BACKSPACE) {
                         // System.out.println("Pressed: " + Input.Keys.toString(keycode));
                         if (!reply.isEmpty()) {
                             reply = reply.substring(0, reply.length() - 1);
                         }
-                } else if (keycode == Input.Keys.ENTER) {
+                } else if (keycode == Keys.ENTER) {
                     if (!reply.isEmpty()) {
                         if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
                             System.out.println("CORRECT!!!");
@@ -149,11 +150,11 @@ public class EquationScreen extends Scene {
         int num1, num2;
 
         if (number == -1) { // No specific number provided
-            num1 = rand.nextInt(99);
-            num2 = rand.nextInt(99);
+            num1 = rand.nextInt(20);
+            num2 = rand.nextInt(20);
         } else { // Use the provided number
             num1 = number;
-            num2 = rand.nextInt(99);
+            num2 = rand.nextInt(20);
         }
 
         if (required == '+') {
@@ -209,6 +210,11 @@ public class EquationScreen extends Scene {
     @Override
     public void dispose() {
         // TODO Auto-generated method stub
+        batch.dispose();
+        font.dispose();
+        overlay.dispose();
+
+
 
     }
 }

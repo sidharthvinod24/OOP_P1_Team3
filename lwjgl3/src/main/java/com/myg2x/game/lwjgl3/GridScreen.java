@@ -16,24 +16,25 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 
-public class GridScreen extends Scene {
+public class GridScreen extends Scene{
 
 	private final AbstractEngine game;
 
-	private Random rand;
-	private FitViewport viewport;
-	private SpriteBatch batch;
-	private ShapeRenderer shape;
+	private final Random rand;
+	private final FitViewport viewport;
+	private final SpriteBatch batch;
+	private final ShapeRenderer shape;
 
-	private EntityManager entityManager;
-	private CollisionManager collisionManager;
-	private AudioManager audioManager;
+	private final EntityManager entityManager;
+	private final CollisionManager collisionManager;
+	private final AudioManager audioManager;
 
 	private Texture circleImage;
-	private Player player;
+	private final Player player;
     private TextureAtlas mathAtlas;
-	private Grid grid;
+	private final Grid grid;
 	private KeyBindingManager keyBindingManager;
+
 
 	public GridScreen(final AbstractEngine game) {
 		this.game = game;
@@ -74,6 +75,7 @@ public class GridScreen extends Scene {
 
 		entityManager.addEntity(player);
 		collisionManager.addEntity(player);
+
 
         loadMathSprites();
 	}
@@ -126,6 +128,8 @@ public class GridScreen extends Scene {
 	    input(delta);
 
 	    logic(delta);
+
+
 	}
 	private void draw() {
 		try {
