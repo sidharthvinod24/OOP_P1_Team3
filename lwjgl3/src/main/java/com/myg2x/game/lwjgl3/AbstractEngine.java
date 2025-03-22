@@ -21,6 +21,7 @@ public class AbstractEngine extends Game implements TimerObserver {
     private EquationScreen equationScreen;
     private KeyBindingScreen keyBindingScreen;
     private KeyBindingManager keyBindingManager;
+    private FinalEquationScreen finalEquationScreen;
 
     // Global countdown timer
     private CountdownTimer countdownTimer;
@@ -48,6 +49,7 @@ public class AbstractEngine extends Game implements TimerObserver {
         menuScene = new MainMenuScreen(this);
         gridScreen = new GridScreen(this);
         equationScreen = new EquationScreen(this, "1");
+        finalEquationScreen = new FinalEquationScreen(this, "1");
 
         // Initialize global countdown timer
         countdownTimer = new CountdownTimer(300);
@@ -107,6 +109,10 @@ public class AbstractEngine extends Game implements TimerObserver {
 
     public void SetKeyBindingScreen() {
         this.setScreen(keyBindingScreen);
+    }
+    
+    public void setFinalEquationScreen() {
+    	this.setScreen(finalEquationScreen);
     }
 
     // Remove an entity from both the EntityManager and CollisionManager in GridScreen

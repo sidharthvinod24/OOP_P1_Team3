@@ -18,20 +18,20 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class EquationScreen extends Scene {
 
-    private final AbstractEngine game;
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private Random rand;
+    protected final AbstractEngine game;
+    protected SpriteBatch batch;
+    protected BitmapFont font;
+    protected Random rand;
 
-    private Texture overlay;
+    protected Texture overlay;
     private Grid grid;
     private GlyphLayout glyphLayout = new GlyphLayout();
 
-    private String answer = "";
-    private String reply = "";
-    private String question = "";
+    protected String answer = "";
+    protected String reply = "";
+    protected String question = "";
     private String value;
-    private List<Object> equation;
+    protected List<Object> equation;
 
     public EquationScreen(final AbstractEngine game, String value) {
         this.value = value;
@@ -45,9 +45,9 @@ public class EquationScreen extends Scene {
         font.getData().setScale(1.5f);
         overlay = new Texture(Gdx.files.internal("testborder.png"));
 
-        equation = RandomiseEqn(value);
-        question = (String) equation.get(0);
-        answer = Integer.toString((int) equation.get(1));
+//        equation = RandomiseEqn(value);
+//        question = (String) equation.get(0);
+//        answer = Integer.toString((int) equation.get(1));
     }
     
     public void setValue(String value) {
@@ -60,7 +60,7 @@ public class EquationScreen extends Scene {
     @Override
     public void render(float delta) {
         game.DrawGridScreen();
-        logic(delta, value);
+        logic(delta);
 
         game.viewport.apply();
         batch.begin();
@@ -72,8 +72,8 @@ public class EquationScreen extends Scene {
         batch.end();
     }
 
-    public void logic(float delta, String value) {
-        if (Gdx.input.isKeyPressed(Keys.A)) {
+    public void logic(float delta) {
+        if (Gdx.input.isKeyPressed(Keys.Q)) {
             game.SetGridScreen();
         }
 
