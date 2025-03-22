@@ -19,10 +19,9 @@ public class Inventory {
         return items;
     }
 
-    // This draw method renders the inventory bar at the bottom of the screen.
+    // Renders inventory at the bottom of the screen
     public void draw(SpriteBatch batch) {
         int index = 0;
-        // Adjust these values as needed for your layout
         for (MathOperatorObject item : items) {
             float x = 0.1f + index * 0.6f; // X-position for each item
             float y = 0.1f;                // Y-position (bottom of the screen)
