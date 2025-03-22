@@ -33,4 +33,10 @@ public class MathOperatorObject extends TextureObject{
     public String getValue() {
         return value;
     }
+    
+ // In MathOperatorObject.java
+    public TextureRegion getNumber() {
+        return number;
+    }
+
 }

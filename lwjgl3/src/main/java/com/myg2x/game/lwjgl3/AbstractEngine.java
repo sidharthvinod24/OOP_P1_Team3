@@ -27,13 +27,20 @@ public class AbstractEngine extends Game implements TimerObserver {
 
     private boolean isRebinding = false; // Track if the key binding screen is active
 
+    // Inventory system and pending math operator
+    private Inventory inventory;
+    private MathOperatorObject pendingMathOperator;
+
+    @Override
     public void create() {
         batch = new SpriteBatch();
         shape = new ShapeRenderer();
         font = new BitmapFont();
         viewport = new FitViewport(8, 5);
-
         font.setUseIntegerPositions(false);
+
+        // Initialize the inventory
+        inventory = new Inventory();
 
         // Initialize scenes
         keyBindingManager = new KeyBindingManager();
@@ -49,27 +56,24 @@ public class AbstractEngine extends Game implements TimerObserver {
         SetMenuScreen();
     }
 
+    @Override
     public void render() {
         float deltaTime = Gdx.graphics.getDeltaTime();
         countdownTimer.update(deltaTime);
 
-       Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         super.render();
 
         // Render the timer on top
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
-
         int minutes = countdownTimer.getRemainingTime() / 60;
         int seconds = countdownTimer.getRemainingTime() % 60;
         String timeText = String.format("Time Left: %02d:%02d", minutes, seconds);
-
         float x = viewport.getWorldWidth() - 1.5f;
         float y = viewport.getWorldHeight() - 0.5f;
-
         font.getData().setScale(0.01f);
         font.draw(batch, timeText, x, y);
-
         batch.end();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -93,15 +97,11 @@ public class AbstractEngine extends Game implements TimerObserver {
     }
     
     public void DrawGridScreen() {
-    	gridScreen.draw();
+        gridScreen.draw();
     }
 
     public void SetEquationScreenWithValue(String value) {
-//        if (equationScreen != null) {
-//            equationScreen.dispose();
-//        }
-//        equationScreen = new EquationScreen(this, value);
-    	equationScreen.setValue(value);
+        equationScreen.setValue(value);
         this.setScreen(equationScreen);
     }
 
@@ -109,6 +109,30 @@ public class AbstractEngine extends Game implements TimerObserver {
         this.setScreen(keyBindingScreen);
     }
 
+    // Remove an entity from both the EntityManager and CollisionManager in GridScreen
+    public void removeEntity(Entity e) {
+        if (gridScreen != null) {
+            gridScreen.removeEntity(e);
+        }
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setPendingMathOperator(MathOperatorObject mop) {
+        pendingMathOperator = mop;
+    }
+
+    public MathOperatorObject getPendingMathOperator() {
+        return pendingMathOperator;
+    }
+
+    public void clearPendingMathOperator() {
+        pendingMathOperator = null;
+    }
+
+    @Override
     public void dispose() {
         super.dispose();
         batch.dispose();
@@ -118,12 +142,12 @@ public class AbstractEngine extends Game implements TimerObserver {
 
     @Override
     public void onTimerUpdate(int timeLeft) {
-        // Optionally, perform actions on each timer update.
+        // Optional: perform actions on each timer update.
     }
 
     @Override
     public void onTimerFinish() {
         System.out.println("Time's up! Ending game...");
-        // Insert game-over logic here (for example, transition to a Game Over screen).
+        // Insert game-over logic here.
     }
 }
