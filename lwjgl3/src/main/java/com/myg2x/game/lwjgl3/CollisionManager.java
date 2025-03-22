@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class CollisionManager {
 
-    private ArrayList<Entity> collisionList;
+    private final ArrayList<Entity> collisionList;
+
 
     CollisionManager() {
         collisionList = new ArrayList<Entity>();
@@ -17,22 +18,37 @@ public class CollisionManager {
     public void removeEntity(Entity e) {
         collisionList.remove(e);
     }
+    
+    public void handleCollision(AudioManager audioManager, Player player, float tileSize, float offset, int gridWidth, int gridHeight, AbstractEngine game) {
+       if (audioManager == null || player == null) {
+            System.err.println("AudioManager or Player is null");
+        }
 
-    public void collisionSound(AudioManager audioManager, Player player) {
-        for (Entity entity : collisionList) {
-            if (entity instanceof Player) {
-                // Check if the player is blocked (for collision sound)
-                if (((Player) entity).checkBlocked()) {
-                    System.out.println("Player is blocked!");
-                    audioManager.playSoundEffect("collision", 0.3f);
+        Random rand = new Random();
+        try {
+            for (Entity entity : collisionList) {
+                if (entity instanceof Player) {
+                    if (((Player) entity).checkBlocked()){
+                        System.out.println("Player is blocked!");
+                        audioManager.playSoundEffect("collision", 0.2f);
+                    }
+                } else {
+                    assert player != null;
+                    if (entity.getRect().overlaps(player.getRect())) {
+                        MathOperatorObject mathEntity = (MathOperatorObject) entity;
+                        System.out.println("Player consumed entity!");
+                        System.out.println("Value: " + mathEntity.getValue());
+                        audioManager.playSoundEffect("consumed", 0.2f);
+                        entity.setPosX(tileSize * rand.nextInt(gridWidth - 1) + offset);
+                        entity.setPosY(tileSize * rand.nextInt(gridHeight - 1) + offset);
+                        // Switch to equation screen with the specific mathEntity
+                        game.SetEquationScreenWithMathEntity(mathEntity);
+                    }
                 }
             }
-
-            // Check if the entity overlaps with the player and play consumed sound if so
-            else if (entity.getRect().overlaps(player.getRect())) {
-                System.out.println("Player consumed entity!");
-                audioManager.playSoundEffect("consumed", 0.3f);
-            }
+        } catch (Exception e){
+            System.err.println("Error in CollisionManager: " + e.getMessage());
+           
         }
     }
 }
