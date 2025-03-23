@@ -23,10 +23,10 @@ public class Inventory {
     public void draw(SpriteBatch batch) {
         int index = 0;
         for (MathOperatorObject item : items) {
-            float x = 0.1f + index * 0.6f; // X-position for each item
+            float x = 0.1f + index * 60f; // X-position for each item
             float y = 0.1f;                // Y-position (bottom of the screen)
             // Draw the operator's texture using its getter method
-            batch.draw(item.getNumber(), x, y, 0.5f, 0.5f);
+            batch.draw(item.getNumber(), x, y, 50f, 50f);
             index++;
         }
     }

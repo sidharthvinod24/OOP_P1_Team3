@@ -46,7 +46,7 @@ public class KeyBindingScreen extends Scene {
 			@Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
          	   	System.out.println("Rebinded LEFT to " + keyBindingManager.getKeyBinding("LEFT"));				
-         	   	game.SetPauseScreen();
+         	   	game.setPauseScreen();
 				return true;
             }
 		};

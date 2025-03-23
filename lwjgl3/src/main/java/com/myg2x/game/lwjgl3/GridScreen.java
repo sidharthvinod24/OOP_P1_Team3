@@ -38,7 +38,7 @@ public class GridScreen extends Scene {
         entityManager = new EntityManager();
         collisionManager = new CollisionManager();
         audioManager = new AudioManager();
-        keyBindingManager = KeyBindingManager().getInstance();
+        keyBindingManager = KeyBindingManager.getInstance();
         
         // Initialize audio files
         try {
@@ -61,7 +61,7 @@ public class GridScreen extends Scene {
             System.err.println("Error loading Circle.png: " + e.getMessage());
         }
 
-        player = new Player(keyBindingManager, grid.getOffset(), grid.getOffset(), 4.f, circleImage);
+        player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
         entityManager.addEntity(player);
         collisionManager.addEntity(player);
 
@@ -134,6 +134,10 @@ public class GridScreen extends Scene {
 
     public void logic(float deltaTime) {
     	
+    	if(Gdx.input.isKeyPressed(Keys.ESCAPE))
+    	{
+    		game.setPauseScreen();
+    	}
     	
     	if(Gdx.input.isKeyPressed(Keys.A)) {
     		game.setFinalEquationScreen();
