@@ -24,7 +24,7 @@ public class AbstractEngine extends Game implements TimerObserver {
 	private EquationScreen equationScreen;
 	private KeyBindingScreen keyBindingScreen;
 	private PauseScreen pauseScreen;
-	
+
 	private KeyBindingManager keyBindingManager;
     private FinalEquationScreen finalEquationScreen;
     // Global countdown timer
@@ -79,7 +79,7 @@ public class AbstractEngine extends Game implements TimerObserver {
         String timeText = String.format("Time Left: %02d:%02d", minutes, seconds);
         float x = viewport.getWorldWidth() - 150f;
         float y = viewport.getWorldHeight() - 50f;
-        font.getData().setScale(0.6f);
+        font.getData().setScale(1f);
         font.draw(batch, timeText, x, y);
         batch.end();
 
@@ -102,7 +102,7 @@ public class AbstractEngine extends Game implements TimerObserver {
         this.setScreen(gridScreen);
         countdownTimer.start();
     }
-    
+
     public void DrawGridScreen() {
         gridScreen.draw();
     }
@@ -115,11 +115,11 @@ public class AbstractEngine extends Game implements TimerObserver {
     public void SetKeyBindingScreen() {
         this.setScreen(keyBindingScreen);
     }
-    
+
     public void setFinalEquationScreen() {
     	this.setScreen(finalEquationScreen);
     }
-    
+
     public void setPauseScreen() {
     	this.setScreen(pauseScreen);
     }
