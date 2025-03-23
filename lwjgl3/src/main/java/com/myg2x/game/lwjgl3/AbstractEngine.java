@@ -30,8 +30,6 @@ public class AbstractEngine extends Game implements TimerObserver {
     // Global countdown timer
     private CountdownTimer countdownTimer;
 
-    private boolean isRebinding = false; // Track if the key binding screen is active
-
     // Inventory system and pending math operator
     private Inventory inventory;
     private MathOperatorObject pendingMathOperator;
@@ -49,15 +47,15 @@ public class AbstractEngine extends Game implements TimerObserver {
 
         // Initialize scenes
         keyBindingManager = KeyBindingManager.getInstance();
-        keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
+        //keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
         menuScene = new MainMenuScreen(this);
-        gridScreen = new GridScreen(this);
-        equationScreen = new EquationScreen(this, "1");
-        finalEquationScreen = new FinalEquationScreen(this, "1");
-        pauseScreen = new PauseScreen(this);
+        //gridScreen = new GridScreen(this);
+        //equationScreen = new EquationScreen(this, "1");
+        //finalEquationScreen = new FinalEquationScreen(this, "1");
+        //pauseScreen = new PauseScreen(this);
 
         // Initialize global countdown timer
-        countdownTimer = new CountdownTimer(300);
+        countdownTimer = new CountdownTimer(10);
         countdownTimer.addObserver(this);
 
         SetMenuScreen();
@@ -103,6 +101,16 @@ public class AbstractEngine extends Game implements TimerObserver {
         countdownTimer.start();
     }
     
+    public void InstantiateScreens(GridScreen gridScreen, PauseScreen pauseScreen,
+    		KeyBindingScreen keybindingScreen, EquationScreen equationScreen, 
+    		FinalEquationScreen finalEquationScreen) {
+    	this.gridScreen = gridScreen;
+    	this.pauseScreen = pauseScreen;
+    	this.keyBindingScreen = keybindingScreen;
+    	this.equationScreen = equationScreen;
+    	this.finalEquationScreen = finalEquationScreen;
+    }
+    
     public void DrawGridScreen() {
         gridScreen.draw();
     }
@@ -143,9 +151,9 @@ public class AbstractEngine extends Game implements TimerObserver {
         return pendingMathOperator;
     }
 
-    public void clearPendingMathOperator() {
-        pendingMathOperator = null;
-    }
+//    public void clearPendingMathOperator() {
+//        pendingMathOperator = null;
+//    }
 
     @Override
     public void dispose() {

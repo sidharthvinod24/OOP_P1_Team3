@@ -27,18 +27,17 @@ public class GridScreen extends Scene {
     private final CollisionManager collisionManager;
     private final AudioManager audioManager;
 
+    
     private Texture circleImage;
     private final Player player;
     private TextureAtlas mathAtlas;
     private final Grid grid;
-    private KeyBindingManager keyBindingManager;
 
     public GridScreen(final AbstractEngine game) {
         this.game = game;
         entityManager = new EntityManager();
         collisionManager = new CollisionManager();
         audioManager = new AudioManager();
-        keyBindingManager = KeyBindingManager.getInstance();
         
         // Initialize audio files
         try {
@@ -61,6 +60,8 @@ public class GridScreen extends Scene {
             System.err.println("Error loading Circle.png: " + e.getMessage());
         }
 
+        
+        
         player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
         entityManager.addEntity(player);
         collisionManager.addEntity(player);
@@ -125,7 +126,7 @@ public class GridScreen extends Scene {
             
             // Draw the inventory bar at the bottom
             batch.begin();
-            game.getInventory().draw(batch);
+            	game.getInventory().draw(batch);
             batch.end();
         } catch (Exception e) {
             System.err.println("Error in draw: " + e.getMessage());

@@ -36,10 +36,17 @@ public class MainMenuScreen extends Scene {
         exitButton = new ButtonObject("Exit", mySkin, 260, 65, 
         		250, 100 , 0.20f);
         
-        InputListener toMenu = new InputListener(){
+        InputListener toGame = new InputListener(){
                @Override
                public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             	   dispose();
+            	   GridScreen gridScreen = new GridScreen(game);
+            	   PauseScreen pauseScreen = new PauseScreen(game);
+            	   EquationScreen equationScreen = new EquationScreen(game, "1");
+            	   FinalEquationScreen finalEquationScreen = new FinalEquationScreen(game, "1");
+            	   KeyBindingScreen keybindingScreen = new KeyBindingScreen(game, KeyBindingManager.getInstance());
+            	   game.InstantiateScreens(gridScreen, pauseScreen, keybindingScreen,
+            			   equationScreen, finalEquationScreen);
             	   game.SetGridScreen();
                    return true;
                }
@@ -55,7 +62,7 @@ public class MainMenuScreen extends Scene {
      };
         
         
-        startButton.setListener(toMenu);
+        startButton.setListener(toGame);
         exitButton.setListener(exitApp);
         
         stage.addActor(startButton.getButton());

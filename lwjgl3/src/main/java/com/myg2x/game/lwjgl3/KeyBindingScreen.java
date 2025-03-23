@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class KeyBindingScreen extends Scene {
 	private final AbstractEngine game;
-	private KeyBindingManager keyBindingManager;
 	private String rebindKeyAction = null;
 	private boolean awaitingNewKey = false; // Tracks if waiting for a new key
 	
@@ -44,8 +43,7 @@ public class KeyBindingScreen extends Scene {
         
         InputListener exitSettings = new InputListener() {
 			@Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-         	   	System.out.println("Rebinded LEFT to " + keyBindingManager.getKeyBinding("LEFT"));				
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {			
          	   	game.setPauseScreen();
 				return true;
             }

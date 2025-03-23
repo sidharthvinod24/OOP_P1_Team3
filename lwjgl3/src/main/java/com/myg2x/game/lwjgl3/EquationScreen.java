@@ -103,7 +103,8 @@ public class EquationScreen extends Scene {
                             if (mop != null) {
                                 game.getInventory().addItem(mop);
                                 game.removeEntity(mop); // Remove the collected object from the grid
-                                game.clearPendingMathOperator();
+                                //game.clearPendingMathOperator();
+                                game.setPendingMathOperator(null);
                             }
                         } else {
                             System.out.println("WRONG!!!");
