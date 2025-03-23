@@ -8,7 +8,7 @@ public class CollisionManager {
     private final ArrayList<Entity> collisionList;
 
     CollisionManager() {
-        collisionList = new ArrayList<Entity>();
+        collisionList = new ArrayList<>();
     }
 
     public void addEntity(Entity e) {
@@ -17,54 +17,47 @@ public class CollisionManager {
             return;
         }
         collisionList.add(e);
-
     }
 
     public void removeEntity(Entity e) {
         collisionList.remove(e);
     }
+
     public void handleCollision(AudioManager audioManager, Player player, float tileSize, float offset, int gridWidth, int gridHeight, AbstractEngine game) {
-       if (audioManager == null || player == null) {
+        if (audioManager == null || player == null) {
             System.err.println("AudioManager or Player is null");
         }
        
         Random rand = new Random();
-        try{
+        try {
             for (Entity entity : collisionList) {
-                // Check if the player is blocked (for collision sound)
+                // Check if the entity is the player (for collision sound)
                 if (entity instanceof Player) {
                     if (((Player) entity).checkBlocked()){
                         System.out.println("Player is blocked!");
-                        // we need to make sure that the audioManager is not null before we call the playSoundEffect method.
                         assert audioManager != null;
                         audioManager.playSoundEffect("collision", 0.2f);
                     }
                 }
-                // Check if the entity overlaps with the player
+                // Handle collision with a MathOperatorObject
                 else {
-                    // We need to make sure that the player is not null before we call the getRect method.
                     assert player != null;
                     if (entity.getRect().overlaps(player.getRect())) {
                         MathOperatorObject mathEntity = (MathOperatorObject) entity;
-                        System.out.println("Player consumed entity!");
-                        System.out.println("Value: " + mathEntity.getValue());
-
-                        // we need to make sure that the audioManager is not null before we call the playSoundEffect method.
+                        System.out.println("Player collided with math operator: " + mathEntity.getValue());
                         assert audioManager != null;
                         audioManager.playSoundEffect("consumed", 0.2f);
-                        // Move the entity to a new position on the grid
-                        entity.setPosX(tileSize * rand.nextInt(gridWidth - 1) + offset);
-                        entity.setPosY(tileSize * rand.nextInt(gridHeight - 1) + offset);
-//                        game.SetEquationScreen();
+                        
+                        // Store the collided math operator as pending
+                        game.setPendingMathOperator(mathEntity);
+                        
+                        // Switch to the EquationScreen with the operator's value
                         game.SetEquationScreenWithValue(mathEntity.getValue());
                     }
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Error in CollisionManager: " + e.getMessage());
         }
-
     }
-
 }
