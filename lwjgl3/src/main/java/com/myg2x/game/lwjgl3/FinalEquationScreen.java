@@ -14,7 +14,7 @@ public class FinalEquationScreen extends EquationScreen{
 	public FinalEquationScreen(AbstractEngine game, String value) {
 		super(game, value);
 		// TODO Auto-generated constructor stub
-		
+
 		equation = RandomiseEqn(value);
         question = (String) equation.get(0);
         answer = Integer.toString((int) equation.get(1));
@@ -22,7 +22,7 @@ public class FinalEquationScreen extends EquationScreen{
         initiallength = reply.length();
 	}
 
-	
+
 	public void render(float delta) {
 		game.DrawGridScreen();
         logic(delta);
@@ -36,7 +36,7 @@ public class FinalEquationScreen extends EquationScreen{
         font.draw(batch, reply, 410, 237.5f);
         batch.end();
 	}
-	
+
 	public void logic(float delta) {
         if (Gdx.input.isKeyPressed(Keys.Q)) {
             game.SetGridScreen();
@@ -59,7 +59,7 @@ public class FinalEquationScreen extends EquationScreen{
                     if (!reply.isEmpty() && reply.length() > initiallength) {
                         reply = reply.substring(0, reply.length() - 1);
                     }
-                    
+
                 } else if (keycode == Keys.EQUALS || keycode == Keys.NUMPAD_ADD) {
                     reply += "+";
                 } else if (keycode == Keys.MINUS || keycode == Keys.NUMPAD_SUBTRACT) {
@@ -68,13 +68,13 @@ public class FinalEquationScreen extends EquationScreen{
                     reply += "*";
                 } else if (keycode == Keys.SLASH || keycode == Keys.NUMPAD_DIVIDE) {
                     reply += "/";
-                
-                
+
+
                 } else if (keycode == Keys.ENTER) {
                     if (!reply.isEmpty()) {
-                    	
+
                     	reply = processEqn(reply);
-                    	
+
                         if(isNumeric(reply)) {
 	                    	if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
 	                            System.out.println("CORRECT!!!");
@@ -84,8 +84,8 @@ public class FinalEquationScreen extends EquationScreen{
 	                            reply = Integer.toString((int) equation.get(2));
 	                            initiallength = reply.length();
 	                            game.SetGridScreen();
-	                            
-	                            
+
+
 	                        } else {
 	                            System.out.println("CONTINUE");
 	                        }
@@ -93,19 +93,19 @@ public class FinalEquationScreen extends EquationScreen{
                         else {
                         	System.out.println("CONTINUE");
                         }
-                        
+
                     }
                 }
                 return false; // Allow further input processing
             }
         });
     }
-	
+
 	private String processEqn(String eqn) {
 		String processed = "";
 		int operatorIndex = -1;
 	    char operator = ' ';
-		
+
 		for (int i = 0; i < eqn.length(); i++) {
 	        char c = eqn.charAt(i);
 	        if (c == '+' || c == '-' || c == '*' || c == '/') {
@@ -114,12 +114,12 @@ public class FinalEquationScreen extends EquationScreen{
 	            break;
 	        }
 	    }
-		
+
 		if (operatorIndex == -1) {
 			System.out.println("NO OPERATOR FOUND");
 			return eqn;
 		}
-		
+
 		String leftStr = eqn.substring(0, operatorIndex);
 	    String rightStr = eqn.substring(operatorIndex + 1);
 	    int left;
@@ -133,9 +133,9 @@ public class FinalEquationScreen extends EquationScreen{
 	    	return eqn;
 	    }
 
-	    
 
-            
+
+
             // Perform the calculation based on the operator
         switch (operator) {
             case '+':
@@ -154,12 +154,12 @@ public class FinalEquationScreen extends EquationScreen{
         }
 
 
-            
-        
-        
+
+
+
 
 	}
-	
+
 	private boolean isNumeric(String value) {
 		try {
 			int i = Integer.parseInt(value);
@@ -168,18 +168,18 @@ public class FinalEquationScreen extends EquationScreen{
 			return false;
 		}
 		return true;
-		
+
 	}
-	
+
 	public List<Object> RandomiseEqn(String value) {
-	
-		
-		int num1 = rand.nextInt(1, 20);
-		int ans = rand.nextInt(1, 80) + num1;
-		
+
+
+		int num1 = rand.nextInt(20 - 1) + 1;
+		int ans = rand.nextInt(80 - 1) + 1 + num1;
+
 		String eqn = "Make " + ans;
-		
-		
+
+
 		return Arrays.asList(eqn, ans, num1);
 	}
 }
