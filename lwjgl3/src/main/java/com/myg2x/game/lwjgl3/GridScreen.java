@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,7 +38,7 @@ public class GridScreen extends Scene {
         entityManager = new EntityManager();
         collisionManager = new CollisionManager();
         audioManager = new AudioManager();
-        keyBindingManager = new KeyBindingManager();
+        keyBindingManager = KeyBindingManager.getInstance();
         
         // Initialize audio files
         try {
@@ -60,7 +61,7 @@ public class GridScreen extends Scene {
             System.err.println("Error loading Circle.png: " + e.getMessage());
         }
 
-        player = new Player(keyBindingManager, grid.getOffset(), grid.getOffset(), 4.f, circleImage);
+        player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
         entityManager.addEntity(player);
         collisionManager.addEntity(player);
 
@@ -132,6 +133,11 @@ public class GridScreen extends Scene {
     }
 
     public void logic(float deltaTime) {
+    	
+    	if(Gdx.input.isKeyPressed(Keys.ESCAPE))
+    	{
+    		game.setPauseScreen();
+    	}
     	
     	if(Gdx.input.isKeyPressed(Keys.A)) {
     		game.setFinalEquationScreen();

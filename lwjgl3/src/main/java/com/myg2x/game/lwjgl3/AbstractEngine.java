@@ -2,27 +2,31 @@ package com.myg2x.game.lwjgl3;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.Input;
 
 public class AbstractEngine extends Game implements TimerObserver {
 
-    public SpriteBatch batch;
-    public ShapeRenderer shape;
-    public BitmapFont font;
-    public FitViewport viewport;
+	public SpriteBatch batch;
+	public ShapeRenderer shape;
+	public BitmapFont font;
+	public OrthographicCamera camera;
+	public FitViewport viewport;
 
-    private MainMenuScreen menuScene;
-    private GridScreen gridScreen;
-    private EquationScreen equationScreen;
-    private KeyBindingScreen keyBindingScreen;
-    private KeyBindingManager keyBindingManager;
+	private MainMenuScreen menuScene;
+	private GridScreen gridScreen;
+	private EquationScreen equationScreen;
+	private KeyBindingScreen keyBindingScreen;
+	private PauseScreen pauseScreen;
+	
+	private KeyBindingManager keyBindingManager;
     private FinalEquationScreen finalEquationScreen;
-
     // Global countdown timer
     private CountdownTimer countdownTimer;
 
@@ -37,19 +41,20 @@ public class AbstractEngine extends Game implements TimerObserver {
         batch = new SpriteBatch();
         shape = new ShapeRenderer();
         font = new BitmapFont();
-        viewport = new FitViewport(8, 5);
+        viewport = new FitViewport(800, 500);
         font.setUseIntegerPositions(false);
 
         // Initialize the inventory
         inventory = new Inventory();
 
         // Initialize scenes
-        keyBindingManager = new KeyBindingManager();
+        keyBindingManager = KeyBindingManager.getInstance();
         keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
         menuScene = new MainMenuScreen(this);
         gridScreen = new GridScreen(this);
         equationScreen = new EquationScreen(this, "1");
         finalEquationScreen = new FinalEquationScreen(this, "1");
+        pauseScreen = new PauseScreen(this);
 
         // Initialize global countdown timer
         countdownTimer = new CountdownTimer(300);
@@ -72,21 +77,21 @@ public class AbstractEngine extends Game implements TimerObserver {
         int minutes = countdownTimer.getRemainingTime() / 60;
         int seconds = countdownTimer.getRemainingTime() % 60;
         String timeText = String.format("Time Left: %02d:%02d", minutes, seconds);
-        float x = viewport.getWorldWidth() - 1.5f;
-        float y = viewport.getWorldHeight() - 0.5f;
-        font.getData().setScale(0.01f);
+        float x = viewport.getWorldWidth() - 150f;
+        float y = viewport.getWorldHeight() - 50f;
+        font.getData().setScale(0.6f);
         font.draw(batch, timeText, x, y);
         batch.end();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            if (getScreen() == keyBindingScreen) {
-                SetMenuScreen();
-                isRebinding = false;
-            } else if (getScreen() == gridScreen) {
-                SetKeyBindingScreen();
-                isRebinding = true;
-            }
-        }
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+//            if (getScreen() == keyBindingScreen) {
+//                SetMenuScreen();
+//                isRebinding = false;
+//            } else if (getScreen() == gridScreen) {
+//                SetKeyBindingScreen();
+//                isRebinding = true;
+//            }
+//        }
     }
 
     public void SetMenuScreen() {
@@ -113,6 +118,10 @@ public class AbstractEngine extends Game implements TimerObserver {
     
     public void setFinalEquationScreen() {
     	this.setScreen(finalEquationScreen);
+    }
+    
+    public void setPauseScreen() {
+    	this.setScreen(pauseScreen);
     }
 
     // Remove an entity from both the EntityManager and CollisionManager in GridScreen

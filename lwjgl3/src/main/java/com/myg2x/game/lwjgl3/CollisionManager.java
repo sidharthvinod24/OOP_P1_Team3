@@ -27,7 +27,7 @@ public class CollisionManager {
         if (audioManager == null || player == null) {
             System.err.println("AudioManager or Player is null");
         }
-
+       
         Random rand = new Random();
         try {
             for (Entity entity : collisionList) {
