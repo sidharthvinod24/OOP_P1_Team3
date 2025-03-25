@@ -43,7 +43,7 @@ public class AbstractEngine extends Game implements TimerObserver {
         font = new BitmapFont();
         viewport = new FitViewport(800, 500);
         font.setUseIntegerPositions(false);
-        font.setColor(Color.BLACK);
+        font.setColor(Color.WHITE);
 
         // Initialize the inventory
         inventory = new Inventory();
@@ -75,7 +75,7 @@ public class AbstractEngine extends Game implements TimerObserver {
         int seconds = countdownTimer.getRemainingTime() % 60;
         String timeText = String.format("Time Left: %02d:%02d", minutes, seconds);
         float x = viewport.getWorldWidth() - 150f;
-        float y = viewport.getWorldHeight() - 50f;
+        float y = viewport.getWorldHeight() - 5f;
         font.getData().setScale(1f);
         font.draw(batch, timeText, x, y);
         batch.end();

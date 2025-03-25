@@ -56,7 +56,7 @@ public class GridScreen extends Scene {
 
         try {
             circleImage = new Texture(Gdx.files.internal("Circle.png"));
-            background = new Texture(Gdx.files.internal("classroom_background2.jpg"));
+            background = new Texture(Gdx.files.internal("chalkboard_background.jpg"));
         } catch (Exception e) {
             System.err.println("Error loading textures: " + e.getMessage());
         }
@@ -153,7 +153,7 @@ public class GridScreen extends Scene {
             batch.end();
             shape.setProjectionMatrix(game.viewport.getCamera().combined);
             shape.begin(ShapeRenderer.ShapeType	.Line);
-            shape.setColor(Color.DARK_GRAY);
+            shape.setColor(Color.WHITE);
             grid.draw(shape); // Draw the grid
             shape.end();
             
