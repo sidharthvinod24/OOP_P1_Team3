@@ -45,7 +45,9 @@ public class AudioManager {
 
     // Dispose all audio
     public void dispose() {
+    	
         for (Audio audio : audioMap.values()) {
+        	audio.stopMusic();
             audio.dispose();
         }
     }

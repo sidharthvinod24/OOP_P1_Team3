@@ -3,6 +3,7 @@ package com.myg2x.game.lwjgl3;
 
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.Gdx;
 public class MainMenuScreen extends Scene {
 
     private final AbstractEngine game;
+    private Texture background;
     private BitmapFont font;
     private Stage stage;
     private Skin mySkin;
@@ -30,23 +32,18 @@ public class MainMenuScreen extends Scene {
         //Intialisation for stage and buttons
         stage = new Stage(game.viewport);
         mySkin = new Skin(Gdx.files.internal("skin/level-plane-ui.json"));
+        background = new Texture(Gdx.files.internal("blackboard_background.png"));
         
         startButton = new ButtonObject("Start", mySkin, 260, 65, 
-        		250, 200 , 0.20f);
+        		250, 220 , 0.20f);
         exitButton = new ButtonObject("Exit", mySkin, 260, 65, 
-        		250, 100 , 0.20f);
+        		250, 120 , 0.20f);
         
         InputListener toGame = new InputListener(){
                @Override
                public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             	   dispose();
-            	   GridScreen gridScreen = new GridScreen(game);
-            	   PauseScreen pauseScreen = new PauseScreen(game);
-            	   EquationScreen equationScreen = new EquationScreen(game, "1");
-            	   FinalEquationScreen finalEquationScreen = new FinalEquationScreen(game, "1");
-            	   KeyBindingScreen keybindingScreen = new KeyBindingScreen(game, KeyBindingManager.getInstance());
-            	   game.InstantiateScreens(gridScreen, pauseScreen, keybindingScreen,
-            			   equationScreen, finalEquationScreen);
+            	   game.InstantiateScreens();
             	   game.SetGridScreen();
                    return true;
                }
@@ -73,7 +70,7 @@ public class MainMenuScreen extends Scene {
     @Override
     public void render(float delta) {
 
-        ScreenUtils.clear(Color.BLACK);
+        //ScreenUtils.clear(Color.BLACK);
         Gdx.input.setInputProcessor(stage);
         
         game.viewport.apply();
@@ -81,9 +78,11 @@ public class MainMenuScreen extends Scene {
 
         game.batch.begin();
 	        //draw text. Remember that x and y are in meters
-	        font.draw(game.batch, "P1-Team 3 ", 325f, 450f);
-	        font.draw(game.batch, "Welcome to our abstract engine!", 150f, 420f);
-	        font.draw(game.batch, "Click to begin!", 275f, 390f);
+        	game.batch.draw(background, 0, 0, 800f, 500f);
+        	//game.batch.draw
+	        font.draw(game.batch, "P1-Team 3 ", 325f, 440f);
+	        font.draw(game.batch, "Welcome to our game!", 225f, 410f);
+	        font.draw(game.batch, "Click to begin!", 275f, 380f);
 	        //font.draw(game.batch, "Welcome!", 200f, 325f);
         game.batch.end();
         

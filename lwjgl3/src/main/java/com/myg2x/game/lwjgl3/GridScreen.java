@@ -27,7 +27,7 @@ public class GridScreen extends Scene {
     private final CollisionManager collisionManager;
     private final AudioManager audioManager;
 
-    
+    private Texture background;
     private Texture circleImage;
     private final Player player;
     private TextureAtlas mathAtlas;
@@ -56,11 +56,12 @@ public class GridScreen extends Scene {
 
         try {
             circleImage = new Texture(Gdx.files.internal("Circle.png"));
+            background = new Texture(Gdx.files.internal("classroom_background2.jpg"));
         } catch (Exception e) {
-            System.err.println("Error loading Circle.png: " + e.getMessage());
+            System.err.println("Error loading textures: " + e.getMessage());
         }
-
         
+       
         
         player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
         entityManager.addEntity(player);
@@ -112,15 +113,16 @@ public class GridScreen extends Scene {
 
     public void draw() {
         try {
-            ScreenUtils.clear(0, 0, 0.2f, 1); // Clear with dark blue
+            //ScreenUtils.clear(0, 0, 0.2f, 1); // Clear with dark blue
             game.viewport.apply();
             batch.setProjectionMatrix(game.viewport.getCamera().combined);
             batch.begin();
+            batch.draw(background, 0f, 0f, 800f, 500f);
             entityManager.render(batch); // Draw all entities
             batch.end();
             shape.setProjectionMatrix(game.viewport.getCamera().combined);
-            shape.begin(ShapeRenderer.ShapeType.Line);
-            shape.setColor(Color.WHITE);
+            shape.begin(ShapeRenderer.ShapeType	.Line);
+            shape.setColor(Color.DARK_GRAY);
             grid.draw(shape); // Draw the grid
             shape.end();
             
@@ -202,6 +204,7 @@ public class GridScreen extends Scene {
         } catch (Exception e) {
             System.err.println("Error disposing mathAtlas: " + e.getMessage());
         }
+        background.dispose();
     }
     
     // New method to remove an entity from both the EntityManager and CollisionManager
