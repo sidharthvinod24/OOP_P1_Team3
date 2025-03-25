@@ -66,6 +66,7 @@ public class GridScreen extends Scene {
         collisionManager.addEntity(player);
 
         loadMathSprites();
+        StartingInventory();
     }
 
     private void loadMathSprites() {
@@ -92,6 +93,36 @@ public class GridScreen extends Scene {
                 );
                 entityManager.addEntity(mathEntity);
                 collisionManager.addEntity(mathEntity);
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading sprite.atlas: " + e.getMessage());
+        }
+    }
+    
+    private void StartingInventory() {
+    	FileHandle atlasFile = Gdx.files.internal("sprite.atlas");
+        try {
+            mathAtlas = new TextureAtlas(atlasFile);
+            // Prepare texture regions for numbers and operators
+            TextureRegion[] numberRegions = new TextureRegion[13];
+            for (int i = 0; i < 9; i++) {
+                numberRegions[i] = mathAtlas.findRegion(String.valueOf(i + 1));
+            }
+            String[] operators = {"plus", "minus", "multiplication", "divide"};
+            for (int i = 9; i < 13; i++) {
+                numberRegions[i] = mathAtlas.findRegion(operators[i - 9]);
+            }
+            System.out.println(Arrays.toString(numberRegions));
+            // Add math operator entities
+            for (int i = 0; i < 13; i++) {
+                MathOperatorObject mathEntity = new MathOperatorObject(
+                    grid.getTileSize() * rand.nextInt(grid.getWidth()) + grid.getOffset(),
+                    grid.getTileSize() * rand.nextInt(grid.getHeight()) + grid.getOffset(),
+                    rand.nextFloat() * 2.f,
+                    numberRegions,
+                    i
+                );
+                game.getInventory().StartingInv(mathEntity);
             }
         } catch (Exception e) {
             System.err.println("Error loading sprite.atlas: " + e.getMessage());
