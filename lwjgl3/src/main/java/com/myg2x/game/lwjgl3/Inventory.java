@@ -41,6 +41,10 @@ public class Inventory {
     public ArrayList<MathOperatorObject> getItems() {
         return items;
     }
+    public void clearInventory()
+    {
+    	items.clear();
+    }
 
     // Renders inventory at the bottom of the screen
     public void draw(SpriteBatch batch) {

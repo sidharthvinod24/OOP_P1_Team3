@@ -3,6 +3,7 @@ package com.myg2x.game.lwjgl3;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,13 +25,12 @@ public class AbstractEngine extends Game implements TimerObserver {
 	private EquationScreen equationScreen;
 	private KeyBindingScreen keyBindingScreen;
 	private PauseScreen pauseScreen;
-
+	private GameOverScreen gameOverScreen;
+	
 	private KeyBindingManager keyBindingManager;
     private FinalEquationScreen finalEquationScreen;
     // Global countdown timer
     private CountdownTimer countdownTimer;
-
-    private boolean isRebinding = false; // Track if the key binding screen is active
 
     // Inventory system and pending math operator
     private Inventory inventory;
@@ -43,18 +43,15 @@ public class AbstractEngine extends Game implements TimerObserver {
         font = new BitmapFont();
         viewport = new FitViewport(800, 500);
         font.setUseIntegerPositions(false);
+        font.setColor(Color.BLACK);
 
         // Initialize the inventory
         inventory = new Inventory();
 
         // Initialize scenes
         keyBindingManager = KeyBindingManager.getInstance();
-        keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
+        //keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
         menuScene = new MainMenuScreen(this);
-        gridScreen = new GridScreen(this);
-        equationScreen = new EquationScreen(this, "1");
-        finalEquationScreen = new FinalEquationScreen(this, "1");
-        pauseScreen = new PauseScreen(this);
 
         // Initialize global countdown timer
         countdownTimer = new CountdownTimer(300);
@@ -82,16 +79,6 @@ public class AbstractEngine extends Game implements TimerObserver {
         font.getData().setScale(1f);
         font.draw(batch, timeText, x, y);
         batch.end();
-
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-//            if (getScreen() == keyBindingScreen) {
-//                SetMenuScreen();
-//                isRebinding = false;
-//            } else if (getScreen() == gridScreen) {
-//                SetKeyBindingScreen();
-//                isRebinding = true;
-//            }
-//        }
     }
 
     public void SetMenuScreen() {
@@ -102,7 +89,23 @@ public class AbstractEngine extends Game implements TimerObserver {
         this.setScreen(gridScreen);
         countdownTimer.start();
     }
-
+    
+    public void SetGameOverScreen() {
+    	this.setScreen(gameOverScreen);
+    }
+   
+    public void InstantiateScreens()
+    {
+    	this.gridScreen = new GridScreen(this);
+    	this.pauseScreen = new PauseScreen(this);
+    	this.keyBindingScreen = new KeyBindingScreen(this, KeyBindingManager.getInstance());
+    	this.equationScreen = new EquationScreen(this, "1");
+    	this.finalEquationScreen = new FinalEquationScreen(this, "1");
+    	this.gameOverScreen = new GameOverScreen(this);
+    	countdownTimer.reset(300);
+    	countdownTimer.addObserver(gameOverScreen);
+    }
+    
     public void DrawGridScreen() {
         gridScreen.draw();
     }
@@ -143,9 +146,9 @@ public class AbstractEngine extends Game implements TimerObserver {
         return pendingMathOperator;
     }
 
-    public void clearPendingMathOperator() {
-        pendingMathOperator = null;
-    }
+//    public void clearPendingMathOperator() {
+//        pendingMathOperator = null;
+//    }
 
     @Override
     public void dispose() {

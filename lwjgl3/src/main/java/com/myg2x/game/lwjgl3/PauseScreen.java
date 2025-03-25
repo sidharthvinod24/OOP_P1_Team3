@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public class PauseScreen extends Scene{
 
@@ -51,8 +52,9 @@ public class PauseScreen extends Scene{
 		InputListener exitToMenu = new InputListener() {
 			@Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-         	   game.SetMenuScreen();
-               return true;
+				game.SetMenuScreen();
+				game.getInventory().clearInventory();
+				return true;
             }
 		};
 		
@@ -87,6 +89,7 @@ public class PauseScreen extends Scene{
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		logic(delta);
+		ScreenUtils.clear(0, 0, 0, 1); // Clear with dark blue
 		game.viewport.apply();
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		
