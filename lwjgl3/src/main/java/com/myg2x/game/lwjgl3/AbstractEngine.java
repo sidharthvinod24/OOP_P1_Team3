@@ -121,7 +121,7 @@ public class AbstractEngine extends Game implements TimerObserver {
     	this.equationScreen = new EquationScreen(this, "1");
     	this.finalEquationScreen = new FinalEquationScreen(this, "1");
     	this.gameOverScreen = new GameOverScreen(this);
-    	countdownTimer.reset(10);
+    	countdownTimer.reset(60);
     	countdownTimer.addObserver(gameOverScreen);
     }
     
