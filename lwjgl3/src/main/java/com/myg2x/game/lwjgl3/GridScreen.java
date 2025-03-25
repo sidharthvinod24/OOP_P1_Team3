@@ -243,5 +243,35 @@ public class GridScreen extends Scene {
         entityManager.removeEntity(e);
         collisionManager.removeEntity(e);
     }
+    
+    public void addEntity() {
+    	FileHandle atlasFile = Gdx.files.internal("sprite.atlas");
+        try {
+            mathAtlas = new TextureAtlas(atlasFile);
+            // Prepare texture regions for numbers and operators
+            TextureRegion[] numberRegions = new TextureRegion[13];
+            for (int i = 0; i < 9; i++) {
+                numberRegions[i] = mathAtlas.findRegion(String.valueOf(i + 1));
+            }
+            String[] operators = {"plus", "minus", "multiplication", "divide"};
+            for (int i = 9; i < 13; i++) {
+                numberRegions[i] = mathAtlas.findRegion(operators[i - 9]);
+            }
+            System.out.println(Arrays.toString(numberRegions));
+            // Add math operator entities
+
+            MathOperatorObject mathEntity = new MathOperatorObject(
+                grid.getTileSize() * rand.nextInt(grid.getWidth()) + grid.getOffset(),
+                grid.getTileSize() * rand.nextInt(grid.getHeight()) + grid.getOffset(),
+                rand.nextFloat() * 2.f,
+                numberRegions);
+
+            entityManager.addEntity(mathEntity);
+            collisionManager.addEntity(mathEntity);
+            
+        } catch (Exception e) {
+            System.err.println("Error loading sprite.atlas: " + e.getMessage());
+        }
+    }
 }
 

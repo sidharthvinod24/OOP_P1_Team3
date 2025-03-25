@@ -54,7 +54,7 @@ public class AbstractEngine extends Game implements TimerObserver {
         menuScene = new MainMenuScreen(this);
 
         // Initialize global countdown timer
-        countdownTimer = new CountdownTimer(300);
+        countdownTimer = new CountdownTimer(60);
         countdownTimer.addObserver(this);
 
         SetMenuScreen();
@@ -79,6 +79,25 @@ public class AbstractEngine extends Game implements TimerObserver {
         font.getData().setScale(1f);
         font.draw(batch, timeText, x, y);
         batch.end();
+        
+        if(countdownTimer.getRemainingTime() == 0) {
+        	countdownTimer.reset(999999);
+        	this.setFinalEquationScreen();
+        }
+
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+//            if (getScreen() == keyBindingScreen) {
+//                SetMenuScreen();
+//                isRebinding = false;
+//            } else if (getScreen() == gridScreen) {
+//                SetKeyBindingScreen();
+//                isRebinding = true;
+//            }
+//        }
+    }
+    
+    public void ResetTimer() {
+    	countdownTimer.reset(60);
     }
 
     public void SetMenuScreen() {
@@ -102,7 +121,7 @@ public class AbstractEngine extends Game implements TimerObserver {
     	this.equationScreen = new EquationScreen(this, "1");
     	this.finalEquationScreen = new FinalEquationScreen(this, "1");
     	this.gameOverScreen = new GameOverScreen(this);
-    	countdownTimer.reset(300);
+    	countdownTimer.reset(10);
     	countdownTimer.addObserver(gameOverScreen);
     }
     
@@ -120,6 +139,9 @@ public class AbstractEngine extends Game implements TimerObserver {
     }
 
     public void setFinalEquationScreen() {
+    	finalEquationScreen.GameOverCheck();
+    	finalEquationScreen.NewEqn();
+    	
     	this.setScreen(finalEquationScreen);
     }
 
@@ -132,6 +154,10 @@ public class AbstractEngine extends Game implements TimerObserver {
         if (gridScreen != null) {
             gridScreen.removeEntity(e);
         }
+    }
+    
+    public void addEntity() {
+    	gridScreen.addEntity();
     }
 
     public Inventory getInventory() {
@@ -146,9 +172,9 @@ public class AbstractEngine extends Game implements TimerObserver {
         return pendingMathOperator;
     }
 
-//    public void clearPendingMathOperator() {
-//        pendingMathOperator = null;
-//    }
+    public void clearPendingMathOperator() {
+        pendingMathOperator = null;
+    }
 
     @Override
     public void dispose() {

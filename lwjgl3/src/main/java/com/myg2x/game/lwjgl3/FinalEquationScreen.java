@@ -126,22 +126,18 @@ public class FinalEquationScreen extends EquationScreen{
 	                            // Clear all used items from inventory
 	                            usedItems.clear();
 	                            
-	                            equation = RandomiseEqn();
-	                            question = (String) equation.get(0);
-	                            answer = Integer.toString((int) equation.get(1));
-	                            reply = Integer.toString((int) equation.get(2));
-	                            initiallength = reply.length();
+	                            game.ResetTimer();
 	                            game.SetGridScreen();
 
 	                        } else {
-	                        	returnAllItemsToInventory();
-	                        	reply = reply.substring(0,1);
+//	                        	returnAllItemsToInventory();
+//	                        	reply = reply.substring(0,1);
 	                            System.out.println("CONTINUE");
 	                        }
                         }
                         else {
-                        	returnAllItemsToInventory();
-                        	reply = reply.substring(0,1);
+//                        	returnAllItemsToInventory();
+//                        	reply = reply.substring(0,1);
                         	System.out.println("CONTINUE");
                         }
                     }
@@ -179,9 +175,9 @@ public class FinalEquationScreen extends EquationScreen{
                 usedItems.add(item);
                 
                 // Remove from inventory if character is left with nothing
-                if (item.getCount() == 0) {
-                	inventory.getItems().remove(item);
-                }
+//                if (item.getCount() == 0) {
+//                	inventory.getItems().remove(item);
+//                }
                 break;
             }
         }
@@ -244,8 +240,9 @@ public class FinalEquationScreen extends EquationScreen{
 		int operatorIndex = -1;
 	    char operator = ' ';
 
-		for (int i = 0; i < eqn.length(); i++) {
+		for (int i = 1; i < eqn.length(); i++) {
 	        char c = eqn.charAt(i);
+	        
 	        if (c == '+' || c == '-' || c == '*' || c == '/') {
 	            operator = c;
 	            operatorIndex = i;
@@ -274,16 +271,16 @@ public class FinalEquationScreen extends EquationScreen{
             // Perform the calculation based on the operator
         switch (operator) {
             case '+':
-                return Integer.toString((int) left + right);
+                return Integer.toString(left + right);
             case '-':
-                return Integer.toString((int) left - right);
+                return Integer.toString(left - right);
             case '*':
-                return Integer.toString((int)left * right);
+                return Integer.toString(left * right);
             case '/':
                 if (right == 0) {
                     throw new IllegalArgumentException("Division by zero is not allowed");
                 }
-                return Integer.toString((int)left / right);
+                return Integer.toString(left / right);
             default:
                 throw new IllegalArgumentException("Unsupported operator: " + operator);
         }
@@ -303,13 +300,126 @@ public class FinalEquationScreen extends EquationScreen{
 
 	public List<Object> RandomiseEqn() {
 
-
+		ArrayList<MathOperatorObject> itemcount = inventory.getItems();
+		int[] usedtracker = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		int randomoperator;
+		int randomdigit;
+		System.out.println(itemcount);
 		int num1 = rand.nextInt(20 - 1) + 1;
-		int ans = rand.nextInt(80 - 1) + 1 + num1;
+		int ans = num1;
+		
+		
+		for (int i = 0; i < rand.nextInt(2,4); i++) {
 
+			randomoperator = rand.nextInt(9, 13);
+			randomdigit = rand.nextInt(0, 9);
+			while(usedtracker[randomdigit] > itemcount.get(randomdigit).getCount()) {
+				if (randomdigit == 8) {
+					randomdigit = 0;
+				}
+				else {
+					randomdigit++;
+				}
+			}
+			System.out.println(ans);
+			System.out.println(Integer.parseInt(itemcount.get(randomdigit).getValue()));
+			System.out.println("==========");
+			while(true) {
+				switch (randomoperator){
+				
+					case 9: // +
+						if(usedtracker[randomoperator] >= itemcount.get(randomoperator).getCount()) {
+							randomoperator++;
+							continue;
+						}
+						
+						else {
+							usedtracker[randomoperator]++;
+							usedtracker[randomdigit]++;
+							ans += Integer.parseInt(itemcount.get(randomdigit).getValue());
+							
+							break;
+						}
+						
+					case 10: // -
+						if(usedtracker[randomoperator] >= itemcount.get(randomoperator).getCount()) {
+							randomoperator++;
+							continue;
+						}
+						
+						else {
+							usedtracker[randomoperator]++;
+							usedtracker[randomdigit]++;
+							ans -= Integer.parseInt(itemcount.get(randomdigit).getValue());
+							
+							break;
+						}
+					case 11: // *
+						if(usedtracker[randomoperator] >= itemcount.get(randomoperator).getCount()) {
+							randomoperator++;
+							continue;
+						}
+						
+						else {
+							usedtracker[randomoperator]++;
+							usedtracker[randomdigit]++;
+							ans *= Integer.parseInt(itemcount.get(randomdigit).getValue());
+							
+							break;
+						}
+					case 12: // /
+						if(usedtracker[randomoperator] >= itemcount.get(randomoperator).getCount()) {
+							randomoperator = 9;
+							continue;
+						}
+						
+						else {
+							usedtracker[randomoperator]++;
+							usedtracker[randomdigit]++;
+							ans /= Integer.parseInt(itemcount.get(randomdigit).getValue());
+							
+							break;
+						}
+						
+				}
+				break;
+			}
+		}
+		
+
+		if(ans == num1) { // this is super unlikely but it happened during testing somehow
+			ans += rand.nextInt(1, 40);
+		}
+		System.out.println(Arrays.toString(usedtracker));
 		String eqn = "Make " + ans;
 
 
 		return Arrays.asList(eqn, ans, num1);
+	}
+	
+	public void NewEqn() {
+		equation = RandomiseEqn();
+        question = (String) equation.get(0);
+        answer = Integer.toString((int) equation.get(1));
+        reply = Integer.toString((int) equation.get(2));
+        initiallength = reply.length();
+	}
+	public void GameOverCheck() {
+		
+		int opcount = 0;
+		int numcount = 0;
+		for(int i = 9; i < 13; i++) {
+			opcount += inventory.getItems().get(i).getCount();
+		}
+		
+		for(int i = 0; i < 9; i++) {
+			numcount += inventory.getItems().get(i).getCount();
+		}
+		
+		if(opcount <= 4 || numcount <= 4) {
+			System.out.println("YOU LOSE!!!");
+			game.SetMenuScreen();
+		}
+		
 	}
 }
