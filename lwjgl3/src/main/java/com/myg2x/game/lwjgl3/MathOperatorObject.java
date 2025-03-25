@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class MathOperatorObject extends TextureObject{
     private TextureRegion number;
     private String value;
+    private int count;
 
     public MathOperatorObject(float x, float y, float s, TextureRegion[] numberRegion) {
         super(x, y, s, null);
@@ -55,5 +56,18 @@ public class MathOperatorObject extends TextureObject{
     public TextureRegion getNumber() {
         return number;
     }
+    
+    public int getCount() {
+        return count;
+    }
 
+    public void decrementCount() {
+        if (count > 0) {
+            count--;
+        }
+    }
+
+    public void incrementCount() {
+        count++;
+    }
 }

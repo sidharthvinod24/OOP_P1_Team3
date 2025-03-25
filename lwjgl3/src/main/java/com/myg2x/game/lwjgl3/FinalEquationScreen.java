@@ -154,7 +154,7 @@ public class FinalEquationScreen extends EquationScreen{
 	// Check if number is in inventory
 	private boolean checkNumberInInventory(String number) {
 		for (MathOperatorObject item: inventory.getItems()) {
-			if (item.getValue().equals(number)) {
+			if (item.getValue().equals(number) && item.getCount() > 0) {
 				return true;
 			}
 		}
@@ -164,7 +164,7 @@ public class FinalEquationScreen extends EquationScreen{
 	// Check if operator is in inventory
 	private boolean checkOperatorInInventory(String operator) {
 		for (MathOperatorObject item : inventory.getItems()) {
-            if (item.getValue().equals(operator)) {
+            if (item.getValue().equals(operator) && item.getCount() > 0) {
                 return true;
             }
         }
@@ -173,12 +173,15 @@ public class FinalEquationScreen extends EquationScreen{
 	
 	// Remove item from inventory
     private void removeItemFromInventory(String value) {
-        Iterator<MathOperatorObject> iterator = inventory.getItems().iterator();
-        while (iterator.hasNext()) {
-            MathOperatorObject item = iterator.next();
-            if (item.getValue().equals(value)) {
+    	for (MathOperatorObject item : inventory.getItems()) {
+            if (item.getValue().equals(value) && item.getCount() > 0) {
+            	item.decrementCount();
                 usedItems.add(item);
-                iterator.remove();
+                
+                // Remove from inventory if character is left with nothing
+                if (item.getCount() == 0) {
+                	inventory.getItems().remove(item);
+                }
                 break;
             }
         }
@@ -188,9 +191,24 @@ public class FinalEquationScreen extends EquationScreen{
     private void returnItemToInventory(String value) {
         Iterator<MathOperatorObject> iterator = usedItems.iterator();
         while (iterator.hasNext()) {
-            MathOperatorObject item = iterator.next();
+            MathOperatorObject item = iterator.next();	
             if (item.getValue().equals(value)) {
-                inventory.getItems().add(item);
+                // If item is not in inventory, add it back
+                boolean itemExists = false;
+                for (MathOperatorObject invItem : inventory.getItems()) {
+                    if (invItem.getValue().equals(value)) {
+                        invItem.incrementCount();
+                        itemExists = true;
+                        break;
+                    }
+                }
+                
+                // If item doesn't exist in inventory, add it back
+                if (!itemExists) {
+                    inventory.getItems().add(item);
+                    item.incrementCount();
+                }
+                
                 iterator.remove();
                 break;
             }
@@ -199,8 +217,26 @@ public class FinalEquationScreen extends EquationScreen{
     
     // Return all items to inventory
     private void returnAllItemsToInventory() {
-        inventory.getItems().addAll(usedItems);
-        usedItems.clear();
+    	 for (MathOperatorObject item : usedItems) {
+             // Check if item exists in inventory
+             boolean itemExists = false;
+             for (MathOperatorObject invItem : inventory.getItems()) {
+                 if (invItem.getValue().equals(item.getValue())) {
+                     invItem.incrementCount();
+                     itemExists = true;
+                     break;
+                 }
+             }
+             
+             // If item doesn't exist in inventory, add it back
+             if (!itemExists) {
+                 inventory.getItems().add(item);
+                 item.incrementCount();
+             }
+         }
+         
+         // Clear used items
+         usedItems.clear();
     }
     
 	private String processEqn(String eqn) {
