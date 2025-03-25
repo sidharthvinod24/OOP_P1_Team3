@@ -24,6 +24,23 @@ public class MathOperatorObject extends TextureObject{
 
 
     }
+    
+    public MathOperatorObject(float x, float y, float s, TextureRegion[] numberRegion, int forcednum) {
+        super(x, y, s, null);
+        int numIndex = forcednum;
+        this.number = numberRegion[numIndex];
+
+
+        if(numIndex < 9) {
+            this.value = String.valueOf(numIndex+1);
+        }
+        else{
+            String [] operators = {"+", "-", "*", "/"};
+            this.value = operators[numIndex - 9];
+        }
+
+
+    }
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(number, getPosX(), getPosY(), 50f, 50f);

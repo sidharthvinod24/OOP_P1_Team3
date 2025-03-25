@@ -23,7 +23,7 @@ public class FinalEquationScreen extends EquationScreen{
 		
 		// TODO Auto-generated constructor stub	
 		
-		equation = RandomiseEqn(value);
+		equation = RandomiseEqn();
         question = (String) equation.get(0);
         answer = Integer.toString((int) equation.get(1));
         reply = Integer.toString((int) equation.get(2));
@@ -126,7 +126,7 @@ public class FinalEquationScreen extends EquationScreen{
 	                            // Clear all used items from inventory
 	                            usedItems.clear();
 	                            
-	                            equation = RandomiseEqn("1");
+	                            equation = RandomiseEqn();
 	                            question = (String) equation.get(0);
 	                            answer = Integer.toString((int) equation.get(1));
 	                            reply = Integer.toString((int) equation.get(2));
@@ -265,7 +265,7 @@ public class FinalEquationScreen extends EquationScreen{
 
 	}
 
-	public List<Object> RandomiseEqn(String value) {
+	public List<Object> RandomiseEqn() {
 
 
 		int num1 = rand.nextInt(20 - 1) + 1;
