@@ -135,11 +135,13 @@ public class FinalEquationScreen extends EquationScreen{
 
 	                        } else {
 	                        	returnAllItemsToInventory();
+	                        	reply = reply.substring(0,1);
 	                            System.out.println("CONTINUE");
 	                        }
                         }
                         else {
                         	returnAllItemsToInventory();
+                        	reply = reply.substring(0,1);
                         	System.out.println("CONTINUE");
                         }
                     }
