@@ -163,6 +163,8 @@ public class AbstractEngine extends Game implements TimerObserver {
     @Override
     public void onTimerFinish() {
         System.out.println("Time's up! Ending game...");
+
+        
         // Insert game-over logic here.
     }
 }
