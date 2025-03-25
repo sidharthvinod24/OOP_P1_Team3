@@ -7,10 +7,28 @@ import com.badlogic.gdx.math.MathUtils;
 public class MathOperatorObject extends TextureObject{
     private TextureRegion number;
     private String value;
+    private int count;
 
     public MathOperatorObject(float x, float y, float s, TextureRegion[] numberRegion) {
         super(x, y, s, null);
         int numIndex = MathUtils.random(0, numberRegion.length - 1);
+        this.number = numberRegion[numIndex];
+
+
+        if(numIndex < 9) {
+            this.value = String.valueOf(numIndex+1);
+        }
+        else{
+            String [] operators = {"+", "-", "*", "/"};
+            this.value = operators[numIndex - 9];
+        }
+
+
+    }
+    
+    public MathOperatorObject(float x, float y, float s, TextureRegion[] numberRegion, int forcednum) {
+        super(x, y, s, null);
+        int numIndex = forcednum;
         this.number = numberRegion[numIndex];
 
 
@@ -38,5 +56,18 @@ public class MathOperatorObject extends TextureObject{
     public TextureRegion getNumber() {
         return number;
     }
+    
+    public int getCount() {
+        return count;
+    }
 
+    public void decrementCount() {
+        if (count > 0) {
+            count--;
+        }
+    }
+
+    public void incrementCount() {
+        count++;
+    }
 }

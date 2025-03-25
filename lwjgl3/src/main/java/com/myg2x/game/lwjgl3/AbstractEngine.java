@@ -71,13 +71,13 @@ public class AbstractEngine extends Game implements TimerObserver {
         // Render the timer on top
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
-	        int minutes = countdownTimer.getRemainingTime() / 60;
-	        int seconds = countdownTimer.getRemainingTime() % 60;
-	        String timeText = String.format("Time Left: %02d:%02d", minutes, seconds);
-	        float x = viewport.getWorldWidth() - 150f;
-	        float y = viewport.getWorldHeight() - 5f;
-	        font.getData().setScale(1f);
-	        font.draw(batch, timeText, x, y);
+        int minutes = countdownTimer.getRemainingTime() / 60;
+        int seconds = countdownTimer.getRemainingTime() % 60;
+        String timeText = String.format("Time Left: %02d:%02d", minutes, seconds);
+        float x = viewport.getWorldWidth() - 150f;
+        float y = viewport.getWorldHeight() - 50f;
+        font.getData().setScale(1f);
+        font.draw(batch, timeText, x, y);
         batch.end();
     }
 
@@ -118,11 +118,11 @@ public class AbstractEngine extends Game implements TimerObserver {
     public void SetKeyBindingScreen() {
         this.setScreen(keyBindingScreen);
     }
-    
+
     public void setFinalEquationScreen() {
     	this.setScreen(finalEquationScreen);
     }
-    
+
     public void setPauseScreen() {
     	this.setScreen(pauseScreen);
     }
