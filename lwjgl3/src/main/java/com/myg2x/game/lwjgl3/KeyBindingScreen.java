@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class KeyBindingScreen extends Scene {
 	private final AbstractEngine game;
-	private KeyBindingManager keyBindingManager;
 	private String rebindKeyAction = null;
 	private boolean awaitingNewKey = false; // Tracks if waiting for a new key
 	private String errorMessage = null;
@@ -23,14 +22,12 @@ public class KeyBindingScreen extends Scene {
     private Skin mySkin;
 
     private ButtonObject exitButton;
-    
     private BitmapFont font;
     
     private Texture background;
     
 	public KeyBindingScreen(final AbstractEngine game, KeyBindingManager keyBindingManager) {
 		this.game = game;
-		//this.keyBindingManager = keyBindingManager;
 		this.background = new Texture(Gdx.files.internal("whiteboard_img2.png"));
 		
 		mySkin = new Skin(Gdx.files.internal("skin/level-plane-ui.json"));
@@ -68,7 +65,6 @@ public class KeyBindingScreen extends Scene {
 	
 	@Override
 	public void render(float delta) {
-		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// Update error message timer if there's an error message
 		if (errorMessage != null) {
@@ -110,12 +106,6 @@ public class KeyBindingScreen extends Scene {
         
         stage.act();
 		stage.draw();
-        
-		// Esc pressed then exit to menu without binding a key
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-//        	System.out.println("Returning to Main Menu...");
-//            game.SetGridScreen();
-//        }
         
         Gdx.input.setInputProcessor(stage);
         updateKeyBinding();

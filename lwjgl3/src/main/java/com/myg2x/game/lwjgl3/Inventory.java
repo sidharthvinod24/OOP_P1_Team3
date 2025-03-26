@@ -35,7 +35,7 @@ public class Inventory {
         }
         items.add(item);
         item.incrementCount();
-        item.incrementCount();
+        //item.incrementCount();
     }
 
     public ArrayList<MathOperatorObject> getItems() {

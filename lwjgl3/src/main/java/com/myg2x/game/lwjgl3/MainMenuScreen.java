@@ -1,8 +1,5 @@
-
 package com.myg2x.game.lwjgl3;
 
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -88,12 +85,6 @@ public class MainMenuScreen extends Scene {
         
         stage.act();
         stage.draw();
-        
-        //Change to different screen upon left click
-//        if (Gdx.input.isTouched()) {
-//            game.SetGridScreen();           
-//            dispose();
-//        }
 
     }
 

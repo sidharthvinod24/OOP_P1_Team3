@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.Input;
 
 public class AbstractEngine extends Game implements TimerObserver {
 
@@ -23,12 +21,11 @@ public class AbstractEngine extends Game implements TimerObserver {
 	private MainMenuScreen menuScene;
 	private GridScreen gridScreen;
 	private EquationScreen equationScreen;
+    private FinalEquationScreen finalEquationScreen;
 	private KeyBindingScreen keyBindingScreen;
 	private PauseScreen pauseScreen;
 	private GameOverScreen gameOverScreen;
-	
-	private KeyBindingManager keyBindingManager;
-    private FinalEquationScreen finalEquationScreen;
+
     // Global countdown timer
     private CountdownTimer countdownTimer;
 
@@ -48,13 +45,10 @@ public class AbstractEngine extends Game implements TimerObserver {
         // Initialize the inventory
         inventory = new Inventory();
 
-        // Initialize scenes
-        keyBindingManager = KeyBindingManager.getInstance();
-        //keyBindingScreen = new KeyBindingScreen(this, keyBindingManager);
         menuScene = new MainMenuScreen(this);
 
         // Initialize global countdown timer
-        countdownTimer = new CountdownTimer(60);
+        countdownTimer = new CountdownTimer(45);
         countdownTimer.addObserver(this);
 
         SetMenuScreen();
@@ -71,33 +65,23 @@ public class AbstractEngine extends Game implements TimerObserver {
         // Render the timer on top
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
-        int minutes = countdownTimer.getRemainingTime() / 60;
-        int seconds = countdownTimer.getRemainingTime() % 60;
-        String timeText = String.format("Time Left: %02d:%02d", minutes, seconds);
-        float x = viewport.getWorldWidth() - 150f;
-        float y = viewport.getWorldHeight() - 5f;
-        font.getData().setScale(1f);
-        font.draw(batch, timeText, x, y);
+	        int minutes = countdownTimer.getRemainingTime() / 60;
+	        int seconds = countdownTimer.getRemainingTime() % 60;
+	        String timeText = String.format("Time Left: %02d:%02d", minutes, seconds);
+	        float x = viewport.getWorldWidth() - 150f;
+	        float y = viewport.getWorldHeight() - 5f;
+	        font.getData().setScale(1f);
+	        font.draw(batch, timeText, x, y);
         batch.end();
         
-        if(countdownTimer.getRemainingTime() == 0) {
-        	countdownTimer.reset(999999);
-        	this.setFinalEquationScreen();
-        }
-
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-//            if (getScreen() == keyBindingScreen) {
-//                SetMenuScreen();
-//                isRebinding = false;
-//            } else if (getScreen() == gridScreen) {
-//                SetKeyBindingScreen();
-//                isRebinding = true;
-//            }
-//        }
     }
     
     public void ResetTimer() {
-    	countdownTimer.reset(60);
+    	countdownTimer.reset(45);
+    }
+    
+    public CountdownTimer getTimer(){
+    	return this.countdownTimer;
     }
 
     public void SetMenuScreen() {
@@ -112,7 +96,13 @@ public class AbstractEngine extends Game implements TimerObserver {
     public void SetGameOverScreen() {
     	this.setScreen(gameOverScreen);
     }
+    
+    public GameOverScreen GetGameOverScreen()
+    {
+    	return this.gameOverScreen;
+    }
    
+    //Instantiate all required screens when needed
     public void InstantiateScreens()
     {
     	this.gridScreen = new GridScreen(this);
@@ -121,12 +111,18 @@ public class AbstractEngine extends Game implements TimerObserver {
     	this.equationScreen = new EquationScreen(this, "1");
     	this.finalEquationScreen = new FinalEquationScreen(this, "1");
     	this.gameOverScreen = new GameOverScreen(this);
-    	countdownTimer.reset(60);
+    	//Reset timer
+    	countdownTimer.reset(45);
     	countdownTimer.addObserver(gameOverScreen);
     }
     
+    //Draw background for screens that display over the GridScreen
     public void DrawGridScreen() {
         gridScreen.draw();
+    }
+    
+    public GridScreen getGridScreen() {
+    	return this.gridScreen;
     }
 
     public void SetEquationScreenWithValue(String value) {
@@ -155,7 +151,8 @@ public class AbstractEngine extends Game implements TimerObserver {
             gridScreen.removeEntity(e);
         }
     }
-    
+   
+    //Add MathOperator entity to grid
     public void addEntity() {
     	gridScreen.addEntity();
     }
@@ -192,6 +189,18 @@ public class AbstractEngine extends Game implements TimerObserver {
     @Override
     public void onTimerFinish() {
         System.out.println("Time's up! Ending game...");
-        // Insert game-over logic here.
+        
+        //If timer finished, set Final Equation Screen
+        if(this.getScreen() != finalEquationScreen)
+        {
+	        this.setFinalEquationScreen();
+	        countdownTimer.reset(30);
+	        countdownTimer.start();
+        }
+        else //If already inside final equation screen, game over, lose!
+        {
+        	gameOverScreen.setState(false);
+        	SetGameOverScreen();
+        }
     }
 }

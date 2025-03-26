@@ -44,8 +44,9 @@ public class PauseScreen extends Scene{
 		InputListener exitPause = new InputListener() {
 			@Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-         	   game.SetGridScreen();
-               return true;
+         	   	game.getTimer().start();
+				game.SetGridScreen();
+				return true;
             }
 		};
 		
@@ -88,8 +89,9 @@ public class PauseScreen extends Scene{
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
+		game.DrawGridScreen();
 		logic(delta);
-		ScreenUtils.clear(0, 0, 0, 1); // Clear with dark blue
+
 		game.viewport.apply();
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		

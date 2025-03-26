@@ -18,7 +18,7 @@ public class GameOverScreen extends Scene implements TimerObserver{
     private BitmapFont font;
     
     private ButtonObject returnToMenuButton;
- 
+    private boolean isWin;
 	
 	
 	public GameOverScreen(final AbstractEngine game){
@@ -32,6 +32,8 @@ public class GameOverScreen extends Scene implements TimerObserver{
 		stage = new Stage(game.viewport);
 		
 		board = new Texture(Gdx.files.internal("whiteboard_img2.png"));
+		
+		isWin = false;
 		
 		returnToMenuButton = new ButtonObject("Return to Menu", new Texture(Gdx.files.internal("post-it.png")), mySkin, 
 				250, 70, 250, 150 , 0.15f);
@@ -50,6 +52,10 @@ public class GameOverScreen extends Scene implements TimerObserver{
 		
 	}
 	
+	public void setState(boolean win)
+	{
+		this.isWin = win;
+	}
 	
 	
 	@Override
@@ -61,14 +67,22 @@ public class GameOverScreen extends Scene implements TimerObserver{
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-		
+		game.DrawGridScreen();
 		logic(delta);
 		game.viewport.apply();
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		
 		game.batch.begin();
 			game.batch.draw(board, 100, 50, 600, 400);
-			font.draw(game.batch, "Game Over!", 325f, 350f);
+			font.draw(game.batch, "Game Over!", 320f, 350f);
+			if(isWin)//If win, display winning text
+			{
+				font.draw(game.batch, "You won!!", 325f, 325f);
+			}
+			else //If lose, display losing text
+			{
+				font.draw(game.batch, "You lost!!", 320f, 325f);
+			}
 		game.batch.end();
 		
 		stage.act();
@@ -124,7 +138,7 @@ public class GameOverScreen extends Scene implements TimerObserver{
 	@Override
 	public void onTimerFinish() {
 		// TODO Auto-generated method stub
-		game.SetGameOverScreen();
+		//game.SetGameOverScreen();
 	}
 
 }

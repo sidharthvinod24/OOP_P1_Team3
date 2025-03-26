@@ -21,8 +21,6 @@ public class GridScreen extends Scene {
 
     private final AbstractEngine game;
     private final Random rand;
-    private final SpriteBatch batch;
-    private final ShapeRenderer shape;
     private final EntityManager entityManager;
     private final CollisionManager collisionManager;
     private final AudioManager audioManager;
@@ -32,12 +30,15 @@ public class GridScreen extends Scene {
     private final Player player;
     private TextureAtlas mathAtlas;
     private final Grid grid;
+    
+    private int level;
 
     public GridScreen(final AbstractEngine game) {
         this.game = game;
         entityManager = new EntityManager();
         collisionManager = new CollisionManager();
         audioManager = new AudioManager();
+        level = 5;
         
         // Initialize audio files
         try {
@@ -51,8 +52,6 @@ public class GridScreen extends Scene {
 
         grid = new Grid();
         rand = new Random();
-        batch = game.batch;
-        shape = game.shape;
 
         try {
             circleImage = new Texture(Gdx.files.internal("Circle.png"));
@@ -71,6 +70,7 @@ public class GridScreen extends Scene {
         StartingInventory();
     }
 
+    //Load textures for all math operators and numbers
     private void loadMathSprites() {
         FileHandle atlasFile = Gdx.files.internal("sprite.atlas");
         try {
@@ -101,6 +101,7 @@ public class GridScreen extends Scene {
         }
     }
     
+    //Set default inventory
     private void StartingInventory() {
     	FileHandle atlasFile = Gdx.files.internal("sprite.atlas");
         try {
@@ -130,7 +131,17 @@ public class GridScreen extends Scene {
             System.err.println("Error loading sprite.atlas: " + e.getMessage());
         }
     }
-
+    
+    public void setLevel(int i)
+    {
+    	level += i;
+    }
+    
+    public int getLevel()
+    {
+    	return level;
+    }
+    
     public void resize(int width, int height) {
         game.viewport.update(width, height, true);
     }
@@ -144,23 +155,26 @@ public class GridScreen extends Scene {
 
     public void draw() {
         try {
-            //ScreenUtils.clear(0, 0, 0.2f, 1); // Clear with dark blue
+        	
             game.viewport.apply();
-            batch.setProjectionMatrix(game.viewport.getCamera().combined);
-            batch.begin();
-            batch.draw(background, 0f, 0f, 800f, 500f);
-            entityManager.render(batch); // Draw all entities
-            batch.end();
-            shape.setProjectionMatrix(game.viewport.getCamera().combined);
-            shape.begin(ShapeRenderer.ShapeType	.Line);
-            shape.setColor(Color.WHITE);
-            grid.draw(shape); // Draw the grid
-            shape.end();
+            
+            game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+            game.batch.begin();
+	           	game.batch.draw(background, 0f, 0f, 800f, 500f);
+	            game.font.draw(game.batch, "Level: " + level, 450, 495);
+	            entityManager.render(game.batch); // Draw all entities
+            game.batch.end();
+            
+            game.shape.setProjectionMatrix(game.viewport.getCamera().combined);
+            game.shape.begin(ShapeRenderer.ShapeType.Line);
+	            game.shape.setColor(Color.WHITE);
+	            grid.draw(game.shape); // Draw the grid
+            game.shape.end();
             
             // Draw the inventory bar at the bottom
-            batch.begin();
-            	game.getInventory().draw(batch);
-            batch.end();
+            game.batch.begin();
+            	game.getInventory().draw(game.batch);
+            game.batch.end();
         } catch (Exception e) {
             System.err.println("Error in draw: " + e.getMessage());
         }
@@ -170,11 +184,13 @@ public class GridScreen extends Scene {
     	
     	if(Gdx.input.isKeyPressed(Keys.ESCAPE))
     	{
+    		game.getTimer().stop();
     		game.setPauseScreen();
     	}
     	
     	if(Gdx.input.isKeyPressed(Keys.A)) {
-    		game.setFinalEquationScreen();
+    		game.GetGameOverScreen().setState(true);
+    		game.SetGameOverScreen();
     	}
     	
         float worldWidth = game.viewport.getWorldWidth();
@@ -184,10 +200,12 @@ public class GridScreen extends Scene {
         player.setPosX(MathUtils.clamp(player.getPosX(), 0, worldWidth - 0.5f));
         player.setPosY(MathUtils.clamp(player.getPosY(), 0, worldHeight - 0.5f));
 
+        //Update entities through manager and handle collisions
         entityManager.update(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight());
         collisionManager.handleCollision(audioManager, player, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), game);
     }
 
+    //Handle input
     public void input(float deltaTime) {
         try {
             player.move(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), (ArrayList<Entity>) entityManager.getEntityList());
@@ -210,16 +228,6 @@ public class GridScreen extends Scene {
 
     @Override
     public void dispose() {
-        try {
-            batch.dispose();
-        } catch (Exception e) {
-            System.err.println("Error disposing batch: " + e.getMessage());
-        }
-        try {
-            shape.dispose();
-        } catch (Exception e) {
-            System.err.println("Error disposing shape: " + e.getMessage());
-        }
         try {
             circleImage.dispose();
         } catch (Exception e) {

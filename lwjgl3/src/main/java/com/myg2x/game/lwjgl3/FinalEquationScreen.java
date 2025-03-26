@@ -36,13 +36,13 @@ public class FinalEquationScreen extends EquationScreen{
         logic(delta);
 
         game.viewport.apply();
-        batch.begin();
-        // Draw overlay and equation texts
-        batch.draw(overlay, 175, 125, 450, 250);
-        font.draw(batch, question, 225, 325);
-        font.draw(batch, "Current: ", 212.5f, 237.5f);
-        font.draw(batch, reply, 410, 237.5f);
-        batch.end();
+        game.batch.begin();
+        	// Draw overlay and equation texts
+	        game.batch.draw(overlay, 175, 125, 450, 250);
+	        font.draw(game.batch, question, 225, 325);
+	        font.draw(game.batch, "Current: ", 212.5f, 237.5f);
+	        font.draw(game.batch, reply, 410, 237.5f);
+        game.batch.end();
 	}
 
 	public void logic(float delta) {
@@ -57,7 +57,7 @@ public class FinalEquationScreen extends EquationScreen{
                 int number = -1;
                 String lastKey = null;
                 
-                // Numbers input check
+                // Numbers and Operators input check
                 if (keycode >= Keys.NUM_0 && keycode <= Keys.NUM_9) {
                     number = keycode - Keys.NUM_0;
                     lastKey = String.valueOf(number);   
@@ -84,6 +84,7 @@ public class FinalEquationScreen extends EquationScreen{
                         reply = reply.substring(0, reply.length() - 1);
                         returnItemToInventory(lastKeyToReturn);
                     }
+                
                 
                 } else if (keycode == Keys.EQUALS || keycode == Keys.NUMPAD_ADD) {
                 	lastKey = "+";
@@ -122,21 +123,32 @@ public class FinalEquationScreen extends EquationScreen{
                         if(isNumeric(reply)) {
 	                    	if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
 	                            System.out.println("CORRECT!!!");
+	                            //Increment level
+	                            game.getGridScreen().setLevel(1);
 	                            
-	                            // Clear all used items from inventory
-	                            usedItems.clear();
+	                            //If not level 5
+	                            if(game.getGridScreen().getLevel() < 6) 
+	                            {
+	                            	// Clear all used items from inventory
+		                            usedItems.clear();
+		                            game.ResetTimer();
+		                            game.SetGridScreen();
+	                            }
+	                            else //If level 5 final equation reached, WIN!!
+	                            {
+	                            	game.GetGameOverScreen().setState(true);
+	                            	game.SetGameOverScreen();
+	                            }
 	                            
-	                            game.ResetTimer();
-	                            game.SetGridScreen();
 
 	                        } else {
-//	                        	returnAllItemsToInventory();
+	                        	returnAllItemsToInventory();
 //	                        	reply = reply.substring(0,1);
 	                            System.out.println("CONTINUE");
 	                        }
                         }
                         else {
-//                        	returnAllItemsToInventory();
+                        	returnAllItemsToInventory();
 //                        	reply = reply.substring(0,1);
                         	System.out.println("CONTINUE");
                         }
@@ -174,10 +186,6 @@ public class FinalEquationScreen extends EquationScreen{
             	item.decrementCount();
                 usedItems.add(item);
                 
-                // Remove from inventory if character is left with nothing
-//                if (item.getCount() == 0) {
-//                	inventory.getItems().remove(item);
-//                }
                 break;
             }
         }
@@ -386,7 +394,7 @@ public class FinalEquationScreen extends EquationScreen{
 			}
 		}
 		
-
+		//Check if initial given number is equal to target number
 		if(ans == num1) { // this is super unlikely but it happened during testing somehow
 			ans += rand.nextInt(1, 40);
 		}
@@ -408,17 +416,21 @@ public class FinalEquationScreen extends EquationScreen{
 		
 		int opcount = 0;
 		int numcount = 0;
+		//Count number of operators
 		for(int i = 9; i < 13; i++) {
 			opcount += inventory.getItems().get(i).getCount();
 		}
 		
+		//Count number of numbers
 		for(int i = 0; i < 9; i++) {
 			numcount += inventory.getItems().get(i).getCount();
 		}
 		
+		//If too little operators or numbers, game over
 		if(opcount <= 4 || numcount <= 4) {
 			System.out.println("YOU LOSE!!!");
-			game.SetMenuScreen();
+			game.GetGameOverScreen().setState(false);
+			game.SetGameOverScreen();
 		}
 		
 	}

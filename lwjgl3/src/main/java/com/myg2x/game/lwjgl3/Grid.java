@@ -9,7 +9,6 @@ public class Grid {
 	private int gridHeight;
 	private float gridOffset;
 	private float gridTileSize;
-	private int[][] grid;
 
 
 	Grid() {
@@ -17,7 +16,6 @@ public class Grid {
 		gridHeight = 9; //9
 		gridOffset = 25f; //0.25
 		gridTileSize = 50f; //0.5
-		grid = new int[gridWidth][gridHeight];
 	}
 
 	public int getWidth() {

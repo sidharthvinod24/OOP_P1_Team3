@@ -19,39 +19,30 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class EquationScreen extends Scene {
 
     protected final AbstractEngine game;
-    protected SpriteBatch batch;
     protected BitmapFont font;
     protected Random rand;
 
     protected Texture overlay;
-    private Grid grid;
-    private GlyphLayout glyphLayout = new GlyphLayout();
 
     protected String answer = "";
     protected String reply = "";
     protected String question = "";
-    private String value;
+ 
     protected List<Object> equation;
+   
 
     public EquationScreen(final AbstractEngine game, String value) {
-        this.value = value;
-        grid = new Grid();
         this.game = game;
-        batch = new SpriteBatch();
         rand = new Random();
 
         font = new BitmapFont(Gdx.files.internal("Atalon.fnt"),
             Gdx.files.internal("Atalon.png"), false);
         font.getData().setScale(1.5f);
         overlay = new Texture(Gdx.files.internal("testborder.png"));
-
-//        equation = RandomiseEqn(value);
-//        question = (String) equation.get(0);
-//        answer = Integer.toString((int) equation.get(1));
     }
     
     public void setValue(String value) {
-        this.value = value;
+        //this.value = value;
         equation = RandomiseEqn(value);
         question = (String) equation.get(0);
         answer = Integer.toString((int) equation.get(1));
@@ -63,13 +54,13 @@ public class EquationScreen extends Scene {
         logic(delta);
 
         game.viewport.apply();
-        batch.begin();
+        game.batch.begin();
         // Draw overlay and equation texts
-        batch.draw(overlay, 175, 125, 450, 250);
-        font.draw(batch, question, 225, 325);
-        font.draw(batch, "ANS: ", 225, 237.5f);
-        font.draw(batch, reply, 350, 237.5f);
-        batch.end();
+	        game.batch.draw(overlay, 175, 125, 450, 250);
+	        font.draw( game.batch, question, 225, 325);
+	        font.draw( game.batch, "ANS: ", 225, 237.5f);
+	        font.draw( game.batch, reply, 350, 237.5f);
+        game.batch.end();
     }
 
     public void logic(float delta) {
@@ -200,7 +191,7 @@ public class EquationScreen extends Scene {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        //batch.dispose();
         font.dispose();
         overlay.dispose();
     }
