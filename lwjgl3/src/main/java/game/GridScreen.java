@@ -191,11 +191,6 @@ public class GridScreen extends Scene {
     		game.setPauseScreen();
     	}
 
-    	if(Gdx.input.isKeyPressed(Keys.A)) {
-    		game.GetGameOverScreen().setState(true);
-    		game.SetGameOverScreen();
-    	}
-
         float worldWidth = game.viewport.getWorldWidth();
         float worldHeight = game.viewport.getWorldHeight();
 
