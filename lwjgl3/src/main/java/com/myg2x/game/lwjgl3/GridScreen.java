@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GridScreen extends Scene {
 
@@ -54,14 +52,14 @@ public class GridScreen extends Scene {
         rand = new Random();
 
         try {
-            circleImage = new Texture(Gdx.files.internal("Circle.png"));
+            circleImage = new Texture(Gdx.files.internal("Student.png"));
             background = new Texture(Gdx.files.internal("chalkboard_background.jpg"));
         } catch (Exception e) {
             System.err.println("Error loading textures: " + e.getMessage());
         }
-        
-       
-        
+
+
+
         player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
         entityManager.addEntity(player);
         collisionManager.addEntity(player);
@@ -181,18 +179,18 @@ public class GridScreen extends Scene {
     }
 
     public void logic(float deltaTime) {
-    	
+
     	if(Gdx.input.isKeyPressed(Keys.ESCAPE))
     	{
     		game.getTimer().stop();
     		game.setPauseScreen();
     	}
-    	
+
     	if(Gdx.input.isKeyPressed(Keys.A)) {
     		game.GetGameOverScreen().setState(true);
     		game.SetGameOverScreen();
     	}
-    	
+
         float worldWidth = game.viewport.getWorldWidth();
         float worldHeight = game.viewport.getWorldHeight();
 
@@ -245,7 +243,7 @@ public class GridScreen extends Scene {
         }
         background.dispose();
     }
-    
+
     // New method to remove an entity from both the EntityManager and CollisionManager
     public void removeEntity(Entity e) {
         entityManager.removeEntity(e);
