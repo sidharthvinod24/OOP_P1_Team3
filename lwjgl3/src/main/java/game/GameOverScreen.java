@@ -45,6 +45,7 @@ public class GameOverScreen extends Scene implements TimerObserver{
 		InputListener exitToMenu = new InputListener() {
 			@Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+			   game.getInventory().clearInventory();
          	   game.SetMenuScreen();
                return true;
             }

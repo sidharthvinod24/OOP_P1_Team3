@@ -35,7 +35,6 @@ public class Inventory {
         }
         items.add(item);
         item.incrementCount();
-        //item.incrementCount();
     }
 
     public ArrayList<MathOperatorObject> getItems() {
@@ -50,7 +49,7 @@ public class Inventory {
     public void draw(SpriteBatch batch) {
         int index = 0;
         for (MathOperatorObject item : items) {
-            float x = 0.1f + index * 50f; // X-position for each item
+            float x = 0.1f + index * 60f; // X-position for each item
             float y = 0.1f;               // Y-position (bottom of the screen)
             
             // Draw the operator's texture using its getter method
@@ -58,9 +57,13 @@ public class Inventory {
             
             // Draw if itemcount > 0
             if (item.getCount() > 0) {
-	            font.draw(batch, Integer.toString(item.getCount()), 40.3f + index * 50f, 55.1f);
+	            font.draw(batch, Integer.toString(item.getCount()), 40.3f + index * 60f, 55.1f);
             }
             index++;
         }
+    }
+    
+    public void InvClear() {
+    	items.clear();
     }
 }

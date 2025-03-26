@@ -144,10 +144,16 @@ public class AbstractEngine extends Game implements TimerObserver {
     }
 
     public void setFinalEquationScreen() {
-    	finalEquationScreen.GameOverCheck();
-    	finalEquationScreen.NewEqn();
+    	if(finalEquationScreen.GameOverCheck() == true) { //not game over
+    		finalEquationScreen.NewEqn();
+        	
+        	this.setScreen(finalEquationScreen);
+    	}
+    	else { //game over
+    		this.gameOverScreen.setState(false);
+    		this.SetGameOverScreen();
+    	}
     	
-    	this.setScreen(finalEquationScreen);
     }
 
     public void setPauseScreen() {

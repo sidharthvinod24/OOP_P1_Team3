@@ -12,7 +12,14 @@ public class MathOperatorObject extends TextureObject{
 
     public MathOperatorObject(float x, float y, float s, TextureRegion[] numberRegion) {
         super(x, y, s, null);
-        int numIndex = MathUtils.random(0, numberRegion.length - 1);
+        int numIndex;
+        if(MathUtils.random(0,1) == 0) { //Equal chance for operators and digits to appear
+        	numIndex = MathUtils.random(0,8);
+        }
+        else {
+        	numIndex = MathUtils.random(9,12);
+        }
+
         this.number = numberRegion[numIndex];
 
 

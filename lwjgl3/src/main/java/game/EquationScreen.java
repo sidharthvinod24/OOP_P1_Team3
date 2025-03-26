@@ -89,19 +89,21 @@ public class EquationScreen extends Scene {
                     }
                 } else if (keycode == Keys.ENTER) {
                     if (!reply.isEmpty()) {
+                    	MathOperatorObject mop = game.getPendingMathOperator();
                         if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
                             System.out.println("CORRECT!!!");
                             // Add the pending math operator to the inventory and remove it from the grid
-                            MathOperatorObject mop = game.getPendingMathOperator();
+                            
                             if (mop != null) {
                                 game.getInventory().addItem(mop);
-                                game.removeEntity(mop); // Remove the collected object from the grid
-                                game.clearPendingMathOperator();
-                                game.addEntity();
+                                
                             }
                         } else {
                             System.out.println("WRONG!!!");
                         }
+                        game.removeEntity(mop); // Remove the collected object from the grid
+                        game.clearPendingMathOperator();
+                        game.addEntity();
                         game.SetGridScreen();
                         reply = "";
                     }
@@ -121,7 +123,7 @@ public class EquationScreen extends Scene {
         operators.add('*');
         operators.add('/');
 
-        System.out.println(value.toCharArray());
+        
 
         for (char c : value.toCharArray()) {
             if (operators.contains(c)) {

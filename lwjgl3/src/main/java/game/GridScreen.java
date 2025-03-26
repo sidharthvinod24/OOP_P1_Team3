@@ -87,7 +87,7 @@ public class GridScreen extends Scene {
             for (int i = 9; i < 13; i++) {
                 numberRegions[i] = mathAtlas.findRegion(operators[i - 9]);
             }
-            System.out.println(Arrays.toString(numberRegions));
+            
             // Add math operator entities
             for (int i = 0; i < 9; i++) {
                 MathOperatorObject mathEntity = new MathOperatorObject(
@@ -268,7 +268,7 @@ public class GridScreen extends Scene {
             for (int i = 9; i < 13; i++) {
                 numberRegions[i] = mathAtlas.findRegion(operators[i - 9]);
             }
-            System.out.println(Arrays.toString(numberRegions));
+            
             // Add math operator entities
 
             MathOperatorObject mathEntity = new MathOperatorObject(

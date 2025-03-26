@@ -64,7 +64,7 @@ public class FinalEquationScreen extends EquationScreen{
                     lastKey = String.valueOf(number);   
                     
                     // Check if number is in inventory 
-                    if (checkNumberInInventory(lastKey) && reply.length() < 7) {
+                    if (checkNumberInInventory(lastKey) && reply.length() < initiallength + 2) {
                         reply += lastKey;
                         removeItemFromInventory(lastKey);
                     }
@@ -73,7 +73,7 @@ public class FinalEquationScreen extends EquationScreen{
                     lastKey = String.valueOf(number);  
                     
                     // Check if number is in inventory 
-                    if (checkNumberInInventory(lastKey) && reply.length() < 7) {
+                    if (checkNumberInInventory(lastKey) && reply.length() < initiallength + 2) {
                         reply += lastKey;
                         removeItemFromInventory(lastKey);
                     }
@@ -89,28 +89,28 @@ public class FinalEquationScreen extends EquationScreen{
                 
                 } else if (keycode == Keys.EQUALS || keycode == Keys.NUMPAD_ADD) {
                 	lastKey = "+";
-                    if (checkOperatorInInventory(lastKey) && reply.length() < 7) {
+                    if (checkOperatorInInventory(lastKey) && reply.length() < initiallength + 2) {
                         reply += lastKey;
                         removeItemFromInventory(lastKey);
                     }
                     
                 } else if (keycode == Keys.MINUS || keycode == Keys.NUMPAD_SUBTRACT) {
                 	lastKey = "-";
-                    if (checkOperatorInInventory(lastKey) && reply.length() < 7) {
+                    if (checkOperatorInInventory(lastKey) && reply.length() < initiallength + 2) {
                         reply += lastKey;
                         removeItemFromInventory(lastKey);
                     }
                     
                 } else if (keycode == Keys.X || keycode == Keys.NUMPAD_MULTIPLY) {
                 	lastKey = "*";
-                    if (checkOperatorInInventory(lastKey) && reply.length() < 7) {
+                    if (checkOperatorInInventory(lastKey) && reply.length() < initiallength + 2) {
                         reply += lastKey;
                         removeItemFromInventory(lastKey);
                     }
                     
                 } else if (keycode == Keys.SLASH || keycode == Keys.NUMPAD_DIVIDE) {
                 	lastKey = "/";
-                    if (checkOperatorInInventory(lastKey) && reply.length() < 7) {
+                    if (checkOperatorInInventory(lastKey) && reply.length() < initiallength + 2) {
                         reply += lastKey;
                         removeItemFromInventory(lastKey);
                     }
@@ -119,9 +119,13 @@ public class FinalEquationScreen extends EquationScreen{
                 } else if (keycode == Keys.ENTER) {
                     if (!reply.isEmpty()) {
 
-                    	reply = processEqn(reply);
-
-                        if(isNumeric(reply)) {
+                    	List<Object> processed = processEqn(reply);
+                    	reply = (String)processed.get(0);
+                    	boolean check = (boolean) processed.get(1);
+                    	
+                    	
+                        if(isNumeric(reply) && check == true) {
+                        	initiallength = reply.length();
 	                    	if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
 	                            System.out.println("CORRECT!!!");
 	                            //Increment level
@@ -135,23 +139,23 @@ public class FinalEquationScreen extends EquationScreen{
 		                            game.ResetTimer();
 		                            game.SetGridScreen();
 	                            }
-	                            else //If level 5 final equation reached, WIN!!
+	                            else //If level 5 final equation reached, WI!!
 	                            {
+	                            	
 	                            	game.GetGameOverScreen().setState(true);
 	                            	game.SetGameOverScreen();
 	                            }
 	                            
 
 	                        } else {
-	                        	returnAllItemsToInventory();
-//	                        	reply = reply.substring(0,1);
-	                            System.out.println("CONTINUE");
+
+	                            System.out.println("CONTINUE, ANS NOT FOUND");
 	                        }
                         }
                         else {
                         	returnAllItemsToInventory();
-//                        	reply = reply.substring(0,1);
-                        	System.out.println("CONTINUE");
+                        	reply = reply.substring(0,initiallength);
+                        	System.out.println("CONTINUE, PROCESS ERROR");
                         }
                     }
                 }
@@ -244,7 +248,7 @@ public class FinalEquationScreen extends EquationScreen{
          usedItems.clear();
     }
     
-	private String processEqn(String eqn) {
+	private List<Object> processEqn(String eqn) {
 		String processed = "";
 		int operatorIndex = -1;
 	    char operator = ' ';
@@ -261,7 +265,7 @@ public class FinalEquationScreen extends EquationScreen{
 
 		if (operatorIndex == -1) {
 			System.out.println("NO OPERATOR FOUND");
-			return eqn;
+			return Arrays.asList(eqn, false);
 		}
 
 		String leftStr = eqn.substring(0, operatorIndex);
@@ -274,22 +278,22 @@ public class FinalEquationScreen extends EquationScreen{
 	        right = Integer.parseInt(rightStr);
 	    }
 	    catch(NumberFormatException e) {
-	    	return eqn;
+	    	return Arrays.asList(eqn, false);
 	    }
 
             // Perform the calculation based on the operator
         switch (operator) {
             case '+':
-                return Integer.toString(left + right);
+                return Arrays.asList(Integer.toString(left + right), true);
             case '-':
-                return Integer.toString(left - right);
+                return Arrays.asList(Integer.toString(left - right), true);
             case '*':
-                return Integer.toString(left * right);
+                return Arrays.asList(Integer.toString(left * right), true);
             case '/':
                 if (right == 0) {
                     throw new IllegalArgumentException("Division by zero is not allowed");
                 }
-                return Integer.toString(left / right);
+                return Arrays.asList(Integer.toString(left / right), true);
             default:
                 throw new IllegalArgumentException("Unsupported operator: " + operator);
         }
@@ -313,7 +317,7 @@ public class FinalEquationScreen extends EquationScreen{
 		int[] usedtracker = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		int randomoperator;
 		int randomdigit;
-		System.out.println(itemcount);
+		
 		int num1 = rand.nextInt(20 - 1) + 1;
 		int ans = num1;
 		
@@ -330,9 +334,7 @@ public class FinalEquationScreen extends EquationScreen{
 					randomdigit++;
 				}
 			}
-			System.out.println(ans);
-			System.out.println(Integer.parseInt(itemcount.get(randomdigit).getValue()));
-			System.out.println("==========");
+			
 			while(true) {
 				switch (randomoperator){
 				
@@ -399,7 +401,7 @@ public class FinalEquationScreen extends EquationScreen{
 		if(ans == num1) { // this is super unlikely but it happened during testing somehow
 			ans += rand.nextInt(1, 40);
 		}
-		System.out.println(Arrays.toString(usedtracker));
+		
 		String eqn = "Make " + ans;
 
 
@@ -413,7 +415,7 @@ public class FinalEquationScreen extends EquationScreen{
         reply = Integer.toString((int) equation.get(2));
         initiallength = reply.length();
 	}
-	public void GameOverCheck() {
+	public boolean GameOverCheck() {
 		
 		int opcount = 0;
 		int numcount = 0;
@@ -428,10 +430,13 @@ public class FinalEquationScreen extends EquationScreen{
 		}
 		
 		//If too little operators or numbers, game over
-		if(opcount <= 4 || numcount <= 4) {
+		if(opcount < 4 || numcount < 4) {
 			System.out.println("YOU LOSE!!!");
-			game.GetGameOverScreen().setState(false);
-			game.SetGameOverScreen();
+
+			return false;
+		}
+		else {
+			return true;
 		}
 		
 	}
