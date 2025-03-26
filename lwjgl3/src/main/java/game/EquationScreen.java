@@ -1,4 +1,4 @@
-package com.myg2x.game.lwjgl3;
+package game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.myg2x.game.lwjgl3.AbstractEngine;
+import com.myg2x.game.lwjgl3.Scene;
 
 public class EquationScreen extends Scene {
 

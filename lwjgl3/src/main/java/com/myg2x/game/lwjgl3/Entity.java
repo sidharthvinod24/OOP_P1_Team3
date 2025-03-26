@@ -14,7 +14,7 @@ public abstract class Entity {
 	private float posX, posY;
 	private float speed;
 
-	Entity()
+	public Entity()
 	{
 		tex = null;
 		box = null;
@@ -23,7 +23,7 @@ public abstract class Entity {
 		speed = 0;
 
 	}
-	Entity(float x, float y, float s, Texture t)
+	public Entity(float x, float y, float s, Texture t)
 	{
 		posX = x;
 		posY = y;

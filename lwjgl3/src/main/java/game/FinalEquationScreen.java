@@ -1,4 +1,4 @@
-package com.myg2x.game.lwjgl3;
+package game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +9,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Input.Keys;
+import com.myg2x.game.lwjgl3.AbstractEngine;
 
 public class FinalEquationScreen extends EquationScreen{
 

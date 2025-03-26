@@ -14,7 +14,7 @@ public class ButtonObject {
 	
 	private Button button;
 	
-	ButtonObject(String text, Skin skin, float xSize, float ySize, float xPos, float yPos, float scaleBy)
+	public ButtonObject(String text, Skin skin, float xSize, float ySize, float xPos, float yPos, float scaleBy)
 	{
 		button = new TextButton(text, skin);
 		button.setSize(xSize, ySize);
@@ -23,7 +23,7 @@ public class ButtonObject {
         button.scaleBy(scaleBy);
 	}
 	
-	ButtonObject(Texture tex, Skin skin, float xSize, float ySize, float xPos, float yPos, float scaleBy)
+	public ButtonObject(Texture tex, Skin skin, float xSize, float ySize, float xPos, float yPos, float scaleBy)
 	{
 		TextureRegionDrawable drawable = new TextureRegionDrawable(tex);
 		button = new ImageButton(skin);
@@ -35,7 +35,7 @@ public class ButtonObject {
         button.scaleBy(scaleBy);
        
 	}
-	ButtonObject(String text, Texture tex, Skin skin, float xSize, float ySize, float xPos, float yPos, float scaleBy)
+	public ButtonObject(String text, Texture tex, Skin skin, float xSize, float ySize, float xPos, float yPos, float scaleBy)
 	{
 		TextureRegionDrawable drawable = new TextureRegionDrawable(tex);
 		button = new ImageTextButton(text,skin);

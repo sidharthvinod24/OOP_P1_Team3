@@ -1,4 +1,4 @@
-package com.myg2x.game.lwjgl3;
+package game;
 
 import java.util.ArrayList;
 

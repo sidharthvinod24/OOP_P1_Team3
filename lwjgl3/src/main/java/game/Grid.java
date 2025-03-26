@@ -1,5 +1,5 @@
 
-package com.myg2x.game.lwjgl3;
+package game;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -11,7 +11,7 @@ public class Grid {
 	private float gridTileSize;
 
 
-	Grid() {
+	public Grid() {
 		gridWidth = 15; //15
 		gridHeight = 9; //9
 		gridOffset = 25f; //0.25

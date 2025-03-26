@@ -3,11 +3,14 @@ package com.myg2x.game.lwjgl3;
 import java.util.ArrayList;
 import java.util.Random;
 
+import game.MathOperatorObject;
+import game.Player;
+
 public class CollisionManager {
 
     private final ArrayList<Entity> collisionList;
 
-    CollisionManager() {
+    public CollisionManager() {
         collisionList = new ArrayList<>();
     }
 

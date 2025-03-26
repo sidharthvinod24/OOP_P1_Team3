@@ -1,4 +1,4 @@
-package com.myg2x.game.lwjgl3;
+package game;
 
 
 import java.util.ArrayList;
@@ -6,6 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.myg2x.game.lwjgl3.Entity;
+import com.myg2x.game.lwjgl3.IMovable;
+import com.myg2x.game.lwjgl3.KeyBindingManager;
 
 public class Player extends Entity implements IMovable {
     private float presstimeL = 0;

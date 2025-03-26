@@ -1,4 +1,4 @@
-package com.myg2x.game.lwjgl3;
+package game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,12 +8,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.myg2x.game.lwjgl3.AbstractEngine;
+import com.myg2x.game.lwjgl3.AudioManager;
+import com.myg2x.game.lwjgl3.CollisionManager;
+import com.myg2x.game.lwjgl3.Entity;
+import com.myg2x.game.lwjgl3.EntityManager;
+import com.myg2x.game.lwjgl3.Scene;
 
 public class GridScreen extends Scene {
 
@@ -36,7 +41,7 @@ public class GridScreen extends Scene {
         entityManager = new EntityManager();
         collisionManager = new CollisionManager();
         audioManager = new AudioManager();
-        level = 5;
+        level = 1;
         
         // Initialize audio files
         try {

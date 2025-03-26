@@ -1,4 +1,4 @@
-package com.myg2x.game.lwjgl3;
+package game;
 	
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,6 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.myg2x.game.lwjgl3.AbstractEngine;
+import com.myg2x.game.lwjgl3.ButtonObject;
+import com.myg2x.game.lwjgl3.KeyBindingManager;
+import com.myg2x.game.lwjgl3.Scene;
 
 public class KeyBindingScreen extends Scene {
 	private final AbstractEngine game;

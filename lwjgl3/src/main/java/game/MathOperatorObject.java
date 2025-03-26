@@ -1,8 +1,9 @@
-package com.myg2x.game.lwjgl3;
+package game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.myg2x.game.lwjgl3.TextureObject;
 
 public class MathOperatorObject extends TextureObject{
     private TextureRegion number;
