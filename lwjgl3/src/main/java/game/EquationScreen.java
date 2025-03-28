@@ -6,15 +6,10 @@ import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.myg2x.game.lwjgl3.AbstractEngine;
 import com.myg2x.game.lwjgl3.Scene;
 
@@ -52,9 +47,13 @@ public class EquationScreen extends Scene {
 
     @Override
     public void render(float delta) {
-        game.DrawGridScreen();
         logic(delta);
-
+        draw();
+    }
+    
+    public void draw()
+    {
+    	game.DrawGridScreen();
         game.viewport.apply();
         game.batch.begin();
         // Draw overlay and equation texts

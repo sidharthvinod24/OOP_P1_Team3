@@ -70,6 +70,7 @@ public class KeyBindingScreen extends Scene {
 	@Override
 	public void render(float delta) {
 		
+		Gdx.input.setInputProcessor(stage);
 		// Update error message timer if there's an error message
 		if (errorMessage != null) {
 			errorMessageTimer -= delta;
@@ -77,10 +78,12 @@ public class KeyBindingScreen extends Scene {
 				errorMessage = null;
 			}
 		}
+        updateKeyBinding();
 		
         game.batch.begin();
 
 	        game.batch.draw(background, 100, 50, 600, 400);
+	        
 	
 	        // Display instructions
 	        font.draw(game.batch, "KEY REBINDING MENU", 120, 400);
@@ -110,9 +113,6 @@ public class KeyBindingScreen extends Scene {
         
         stage.act();
 		stage.draw();
-        
-        Gdx.input.setInputProcessor(stage);
-        updateKeyBinding();
 	}
 	
 	

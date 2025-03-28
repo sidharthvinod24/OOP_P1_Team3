@@ -2,6 +2,8 @@ package game;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,10 +11,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Inventory {
     private ArrayList<MathOperatorObject> items;
     private BitmapFont font;
+    private Texture circle;
    
     public Inventory() {
         items = new ArrayList<>();
         font = new BitmapFont();
+        circle = new Texture(Gdx.files.internal("red_circle.png"));
     }
 
     public void addItem(MathOperatorObject item) {
@@ -57,6 +61,7 @@ public class Inventory {
             
             // Draw if itemcount > 0
             if (item.getCount() > 0) {
+            	batch.draw(circle, 35.5f + index * 60f, 41f, 15, 15);
 	            font.draw(batch, Integer.toString(item.getCount()), 40.3f + index * 60f, 55.1f);
             }
             index++;

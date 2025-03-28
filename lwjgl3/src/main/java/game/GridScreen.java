@@ -63,12 +63,11 @@ public class GridScreen extends Scene {
             System.err.println("Error loading textures: " + e.getMessage());
         }
 
-
-
         player = new Player(grid.getOffset(), grid.getOffset(), 4.f, circleImage);
         entityManager.addEntity(player);
         collisionManager.addEntity(player);
 
+        //Initialise math sprites and starting inventory
         loadMathSprites();
         StartingInventory();
     }
@@ -185,12 +184,6 @@ public class GridScreen extends Scene {
 
     public void logic(float deltaTime) {
 
-    	if(Gdx.input.isKeyPressed(Keys.ESCAPE))
-    	{
-    		game.getTimer().stop();
-    		game.setPauseScreen();
-    	}
-
         float worldWidth = game.viewport.getWorldWidth();
         float worldHeight = game.viewport.getWorldHeight();
 
@@ -205,6 +198,12 @@ public class GridScreen extends Scene {
 
     //Handle input
     public void input(float deltaTime) {
+    	if(Gdx.input.isKeyPressed(Keys.ESCAPE))
+    	{
+    		game.getTimer().stop();
+    		game.setPauseScreen();
+    	}
+    	
         try {
             player.move(deltaTime, grid.getTileSize(), grid.getOffset(), grid.getWidth(), grid.getHeight(), (ArrayList<Entity>) entityManager.getEntityList());
         } catch (Exception e) {

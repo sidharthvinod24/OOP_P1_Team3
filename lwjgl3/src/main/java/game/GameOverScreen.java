@@ -72,8 +72,18 @@ public class GameOverScreen extends Scene implements TimerObserver{
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-		game.DrawGridScreen();
+		draw();
 		logic(delta);
+	}
+	
+	public void logic(float delta) {
+		Gdx.input.setInputProcessor(stage);
+	}
+
+	public void draw()
+	{
+		game.DrawGridScreen();
+		
 		game.viewport.apply();
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		
@@ -92,13 +102,8 @@ public class GameOverScreen extends Scene implements TimerObserver{
 		
 		stage.act();
 		stage.draw();
-		
 	}
 	
-	public void logic(float delta) {
-		Gdx.input.setInputProcessor(stage);
-	}
-
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub

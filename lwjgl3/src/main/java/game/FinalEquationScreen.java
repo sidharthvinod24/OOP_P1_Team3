@@ -33,9 +33,15 @@ public class FinalEquationScreen extends EquationScreen{
 
 
 	public void render(float delta) {
-		game.DrawGridScreen();
+		
         logic(delta);
-
+        draw();
+        
+	}
+	
+	public void draw()
+	{
+		game.DrawGridScreen();
         game.viewport.apply();
         game.batch.begin();
         	// Draw overlay and equation texts
