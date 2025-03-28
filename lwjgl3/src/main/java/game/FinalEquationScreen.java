@@ -142,12 +142,13 @@ public class FinalEquationScreen extends EquationScreen{
 	                            {
 	                            	// Clear all used items from inventory
 		                            usedItems.clear();
+		                            game.getGridScreen().getAudioManager().playSoundEffect("correct", 0.2f);
 		                            game.ResetTimer();
 		                            game.SetGridScreen();
 	                            }
 	                            else //If level 5 final equation reached, WI!!
 	                            {
-	                            	
+	                            	game.getGridScreen().getAudioManager().playSoundEffect("correct", 0.2f);
 	                            	game.GetGameOverScreen().setState(true);
 	                            	game.SetGameOverScreen();
 	                            }

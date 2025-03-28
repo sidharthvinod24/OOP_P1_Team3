@@ -92,6 +92,7 @@ public class EquationScreen extends Scene {
                         if (Integer.parseInt(reply) == Integer.parseInt(answer)) {
                             System.out.println("CORRECT!!!");
                             // Add the pending math operator to the inventory and remove it from the grid
+                            game.getGridScreen().getAudioManager().playSoundEffect("correct", 0.2f);
                             
                             if (mop != null) {
                                 game.getInventory().addItem(mop);
@@ -99,6 +100,7 @@ public class EquationScreen extends Scene {
                             }
                         } else {
                             System.out.println("WRONG!!!");
+                            game.getGridScreen().getAudioManager().playSoundEffect("wrong", 0.2f);
                         }
                         game.removeEntity(mop); // Remove the collected object from the grid
                         game.clearPendingMathOperator();

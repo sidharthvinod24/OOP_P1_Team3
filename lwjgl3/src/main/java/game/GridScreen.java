@@ -48,6 +48,8 @@ public class GridScreen extends Scene {
             audioManager.addAudio("backgroundMusic", "backgroundMusic.mp3", true);
             audioManager.addAudio("collision", "collision.mp3", false);
             audioManager.addAudio("consumed", "consumed.mp3", false);
+            audioManager.addAudio("correct", "answer-correct.mp3", false);
+            audioManager.addAudio("wrong", "answer-wrong.mp3", false);
             audioManager.playMusic("backgroundMusic", true, 0.1f);
         } catch (Exception e) {
             System.err.println("Error initializing audio: " + e.getMessage());
@@ -277,6 +279,12 @@ public class GridScreen extends Scene {
         } catch (Exception e) {
             System.err.println("Error loading sprite.atlas: " + e.getMessage());
         }
+    }
+    
+    public AudioManager getAudioManager()
+    {
+    	return this.audioManager;
+    			
     }
 }
 

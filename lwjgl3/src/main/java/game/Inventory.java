@@ -64,6 +64,7 @@ public class Inventory {
             	batch.draw(circle, 35.5f + index * 60f, 41f, 15, 15);
 	            font.draw(batch, Integer.toString(item.getCount()), 40.3f + index * 60f, 55.1f);
             }
+            
             index++;
         }
     }
